@@ -46,7 +46,8 @@ async function checkUpdate() {
       },
     })
   } catch (error) {
-    message.error(String(error))
+    console.error('Failed to check for updates', error)
+    message.error(t('components.updateApp.hints.checkFailed'))
   } finally {
     checkingUpdate.value = false
   }

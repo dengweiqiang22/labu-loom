@@ -166,7 +166,8 @@
       },
       "hints": {
         "checkingUpdates": "正在檢查更新…",
-        "alreadyLatest": "目前已是最新版本🎉"
+        "alreadyLatest": "目前已是最新版本🎉",
+        "checkFailed": "暫時無法檢查更新，請確認網路連線後稍後再試"
       },
       "buttons": {
         "updateNow": "立即更新",

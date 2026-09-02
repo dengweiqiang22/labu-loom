@@ -166,7 +166,8 @@
       },
       "hints": {
         "checkingUpdates": "Verificando atualizações...",
-        "alreadyLatest": "Você já está na versão mais recente 🎉"
+        "alreadyLatest": "Você já está na versão mais recente 🎉",
+        "checkFailed": "Não foi possível verificar atualizações. Confira sua conexão e tente novamente mais tarde."
       },
       "buttons": {
         "updateNow": "Atualizar Agora",

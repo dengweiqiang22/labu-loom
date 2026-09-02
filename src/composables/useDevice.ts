@@ -7,6 +7,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useAppStore } from '@/stores/app'
 import { useCatStore } from '@/stores/cat'
+import { useGeneralStore } from '@/stores/general'
 import { useModelStore } from '@/stores/model'
 import { inBetween } from '@/utils/is'
 import { isMac, isWindows } from '@/utils/platform'
@@ -45,6 +46,7 @@ export function useDevice() {
   const releaseTimers = new Map<string, NodeJS.Timeout>()
   const appStore = useAppStore()
   const catStore = useCatStore()
+  const generalStore = useGeneralStore()
   const latestCursorPoint = ref<CursorPoint>()
   const smoothedCursorPoint = ref<CursorPoint>()
   const scaleFactor = ref(1)
@@ -100,6 +102,24 @@ export function useDevice() {
   const startListening = () => {
     invoke(INVOKE_KEY.START_DEVICE_LISTENING)
   }
+
+  watch(() => generalStore.app.inputListening, (enabled) => {
+    invoke(INVOKE_KEY.SET_DEVICE_LISTENING_ENABLED, { enabled })
+
+    if (enabled) return
+
+    for (const timer of releaseTimers.values()) {
+      clearTimeout(timer)
+    }
+
+    releaseTimers.clear()
+    latestCursorPoint.value = void 0
+    smoothedCursorPoint.value = void 0
+
+    for (const key of Object.keys(modelStore.pressedKeys)) {
+      handleRelease(key)
+    }
+  }, { immediate: true })
 
   const getSupportedKey = (key: string) => {
     let nextKey = key

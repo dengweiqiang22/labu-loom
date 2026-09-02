@@ -20,6 +20,16 @@ pub struct DeviceEvent {
 }
 
 static IS_LISTENING: AtomicBool = AtomicBool::new(false);
+static DEVICE_EVENTS_ENABLED: AtomicBool = AtomicBool::new(true);
+
+fn device_events_enabled() -> bool {
+    DEVICE_EVENTS_ENABLED.load(Ordering::SeqCst)
+}
+
+#[command]
+pub fn set_device_listening_enabled(enabled: bool) {
+    DEVICE_EVENTS_ENABLED.store(enabled, Ordering::SeqCst);
+}
 
 #[command]
 pub async fn start_device_listening<R: Runtime>(app_handle: AppHandle<R>) -> Result<(), String> {
@@ -30,6 +40,10 @@ pub async fn start_device_listening<R: Runtime>(app_handle: AppHandle<R>) -> Res
     IS_LISTENING.store(true, Ordering::SeqCst);
 
     let callback = move |event: Event| {
+        if !device_events_enabled() {
+            return;
+        }
+
         let device_event = match event.event_type {
             EventType::ButtonPress(button) => DeviceEvent {
                 kind: DeviceEventKind::MousePress,
@@ -60,4 +74,18 @@ pub async fn start_device_listening<R: Runtime>(app_handle: AppHandle<R>) -> Res
     listen(callback).map_err(|err| format!("Failed to listen device: {:?}", err))?;
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{device_events_enabled, set_device_listening_enabled};
+
+    #[test]
+    fn device_events_can_be_disabled_and_reenabled() {
+        set_device_listening_enabled(false);
+        assert!(!device_events_enabled());
+
+        set_device_listening_enabled(true);
+        assert!(device_events_enabled());
+    }
 }

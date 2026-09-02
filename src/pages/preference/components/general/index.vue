@@ -39,6 +39,13 @@ watch(() => generalStore.app.autostart, async (value) => {
     </ProListItem>
 
     <ProListItem
+      :description="$t('pages.preference.general.hints.inputListening')"
+      :title="$t('pages.preference.general.labels.inputListening')"
+    >
+      <Switch v-model:checked="generalStore.app.inputListening" />
+    </ProListItem>
+
+    <ProListItem
       :description="$t('pages.preference.general.hints.showTaskbarIcon')"
       :title="$t('pages.preference.general.labels.showTaskbarIcon')"
     >
@@ -57,11 +64,5 @@ watch(() => generalStore.app.autostart, async (value) => {
     <ThemeMode />
 
     <Language />
-  </ProList>
-
-  <ProList :title="$t('pages.preference.general.labels.updateSettings')">
-    <ProListItem :title="$t('pages.preference.general.labels.autoCheckUpdate')">
-      <Switch v-model:checked="generalStore.update.autoCheck" />
-    </ProListItem>
   </ProList>
 </template>

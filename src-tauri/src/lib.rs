@@ -2,7 +2,7 @@ mod core;
 mod utils;
 
 use core::{
-    device::start_device_listening,
+    device::{set_device_listening_enabled, start_device_listening},
     gamepad::{start_gamepad_listing, stop_gamepad_listing},
     prevent_default, setup,
 };
@@ -30,6 +30,7 @@ pub fn run() {
         .invoke_handler(generate_handler![
             copy_dir,
             start_device_listening,
+            set_device_listening_enabled,
             start_gamepad_listing,
             stop_gamepad_listing
         ])

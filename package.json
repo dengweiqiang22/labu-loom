@@ -1,21 +1,28 @@
 {
-  "name": "bongo-cat",
+  "name": "labu-loom",
   "type": "module",
   "version": "1.1.0",
   "private": true,
-  "author": {
-    "name": "ayangweb",
-    "email": "ayangweb@foxmail.com"
+  "packageManager": "pnpm@11.19.0",
+  "author": "labu-loom contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dengweiqiang22/labu-loom.git"
+  },
+  "engines": {
+    "node": "24.15.0",
+    "pnpm": "11.19.0"
   },
   "scripts": {
     "dev": "run-s build:icon dev:vite",
     "build": "run-s build:*",
     "dev:vite": "vite",
     "build:vite": "vite build",
-    "build:icon": "tsx scripts/buildIcon.ts",
+    "build:icon": "node --experimental-strip-types scripts/buildIcon.ts",
     "preview": "vite preview",
     "tauri": "tauri",
-    "lint": "eslint --fix src",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
     "preinstall": "npx only-allow pnpm",
     "prepare": "simple-git-hooks",
     "release": "release-it"
@@ -33,11 +40,10 @@
     "@tauri-apps/plugin-opener": "^2.5.3",
     "@tauri-apps/plugin-os": "^2.3.2",
     "@tauri-apps/plugin-process": "^2.3.1",
-    "@tauri-apps/plugin-updater": "^2.10.1",
+    "@tauri-apps/plugin-updater": "2.10.1",
     "@tauri-store/pinia": "^3.7.1",
     "@vueuse/core": "^13.9.0",
     "antdv-next": "^1.2.2",
-    "dayjs": "^1.11.20",
     "easy-live2d": "^0.4.4",
     "es-toolkit": "^1.45.1",
     "is-url": "^1.2.4",
@@ -50,7 +56,6 @@
     "type-fest": "^5.6.0",
     "vue": "^3.5.32",
     "vue-i18n": "^11.3.2",
-    "vue-markdown-render": "^2.3.0",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {

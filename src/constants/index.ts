@@ -1,12 +1,9 @@
-export const GITHUB_LINK = 'https://github.com/ayangweb/BongoCat'
-
-export const UPGRADE_LINK_ACCESS_KEY = 'xDbrq2rOoRThDqKOHL2ZRA'
+export const GITHUB_LINK = 'https://github.com/dengweiqiang22/labu-loom'
 
 export const LISTEN_KEY = {
   SHOW_WINDOW: 'show-window',
   HIDE_WINDOW: 'hide-window',
   DEVICE_CHANGED: 'device-changed',
-  UPDATE_APP: 'update-app',
   GAMEPAD_CHANGED: 'gamepad-changed',
   START_MOTION: 'start-motion',
   SET_EXPRESSION: 'set-expression',
@@ -15,6 +12,7 @@ export const LISTEN_KEY = {
 export const INVOKE_KEY = {
   COPY_DIR: 'copy_dir',
   START_DEVICE_LISTENING: 'start_device_listening',
+  SET_DEVICE_LISTENING_ENABLED: 'set_device_listening_enabled',
   START_GAMEPAD_LISTING: 'start_gamepad_listing',
   STOP_GAMEPAD_LISTING: 'stop_gamepad_listing',
 }

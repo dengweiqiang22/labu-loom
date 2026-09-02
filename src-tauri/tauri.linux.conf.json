@@ -1,14 +1,14 @@
 {
-  "identifier": "com.ayangweb.BongoCat",
+  "identifier": "com.labuloom.desktop",
   "bundle": {
     "linux": {
       "deb": {
         "depends": ["gstreamer1.0-plugins-good"],
-        "desktopTemplate": "./BongoCat.desktop"
+        "desktopTemplate": "./LabuLoom.desktop"
       },
       "rpm": {
         "depends": ["gstreamer1-plugins-good"],
-        "desktopTemplate": "./BongoCat.desktop"
+        "desktopTemplate": "./LabuLoom.desktop"
       }
     }
   }

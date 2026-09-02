@@ -1,5 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    bongo_cat_lib::run()
+    labu_loom_lib::run()
 }

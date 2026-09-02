@@ -1,29 +1,55 @@
 <script setup lang="ts">
 import { getTauriVersion } from '@tauri-apps/api/app'
-import { emit } from '@tauri-apps/api/event'
 import { appLogDir } from '@tauri-apps/api/path'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import { openPath, openUrl } from '@tauri-apps/plugin-opener'
 import { arch, platform, version } from '@tauri-apps/plugin-os'
-import { Button, message } from 'antdv-next'
+import { relaunch } from '@tauri-apps/plugin-process'
+import { check } from '@tauri-apps/plugin-updater'
+import { Button, message, Modal } from 'antdv-next'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import ProListItem from '@/components/pro-list-item/index.vue'
 import ProList from '@/components/pro-list/index.vue'
-import { GITHUB_LINK, LISTEN_KEY } from '@/constants'
+import { GITHUB_LINK } from '@/constants'
 import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()
 const logDir = ref('')
+const checkingUpdate = ref(false)
 const { t } = useI18n()
 
 onMounted(async () => {
   logDir.value = await appLogDir()
 })
 
-function handleUpdate() {
-  emit(LISTEN_KEY.UPDATE_APP)
+async function checkUpdate() {
+  try {
+    checkingUpdate.value = true
+
+    const update = await check({ timeout: 5000 })
+
+    if (!update) {
+      message.success(t('components.updateApp.hints.alreadyLatest'))
+      return
+    }
+
+    Modal.confirm({
+      title: t('components.updateApp.title'),
+      content: `v${update.currentVersion} → v${update.version}\n\n${update.body ?? ''}`,
+      okText: t('components.updateApp.buttons.updateNow'),
+      cancelText: t('components.updateApp.buttons.updateLater'),
+      async onOk() {
+        await update.downloadAndInstall()
+        await relaunch()
+      },
+    })
+  } catch (error) {
+    message.error(String(error))
+  } finally {
+    checkingUpdate.value = false
+  }
 }
 
 async function copyInfo() {
@@ -53,8 +79,9 @@ function feedbackIssue() {
       :title="appStore.name"
     >
       <Button
+        :loading="checkingUpdate"
         type="primary"
-        @click="handleUpdate"
+        @click="checkUpdate"
       >
         {{ $t('pages.preference.about.buttons.checkUpdate') }}
       </Button>

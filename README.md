@@ -1,151 +1,126 @@
-![BongoCat](https://socialify.git.ci/ayangweb/BongoCat/image?custom_description=&description=1&font=Source+Code+Pro&forks=1&issues=1&logo=https%3A%2F%2Fgithub.com%2Fayangweb%2FBongoCat%2Fblob%2Fmaster%2Fsrc-tauri%2Fassets%2Flogo-mac.png%3Fraw%3Dtrue&name=1&owner=1&pattern=Floating+Cogs&pulls=1&stargazers=1&theme=Auto)
+# labu-loom
 
-<div align="center">
-  <div>
-    <a href="https://github.com/ayangweb/BongoCat/releases"><img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB0PSIxNzI2MzA1OTcxMDA2IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE1NDgiIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4Ij48cGF0aCBkPSJNNTI3LjI3NTU1MTYxIDk2Ljk3MTAzMDEzdjM3My45OTIxMDY2N2g0OTQuNTEzNjE5NzVWMTUuMDI2NzU3NTN6TTUyNy4yNzU1NTE2MSA5MjguMzIzNTA4MTVsNDk0LjUxMzYxOTc1IDgwLjUyMDI4MDQ5di00NTUuNjc3NDcxNjFoLTQ5NC41MTM2MTk3NXpNNC42NzA0NTEzNiA0NzAuODMzNjgyOTdINDIyLjY3Njg1OTI1VjExMC41NjM2ODE5N2wtNDE4LjAwNjQwNzg5IDY5LjI1Nzc5NzUzek00LjY3MDQ1MTM2IDg0Ni43Njc1OTcwM0w0MjIuNjc2ODU5MjUgOTE0Ljg2MDMxMDEzVjU1My4xNjYzMTcwM0g0LjY3MDQ1MTM2eiIgcC1pZD0iMTU0OSIgZmlsbD0iI2ZmZmZmZiI+PC9wYXRoPjwvc3ZnPg==" /></a>
-    <a href="https://github.com/ayangweb/BongoCat/releases"><img alt="MacOS" src="https://img.shields.io/badge/-MacOS-black?style=flat-square&logo=apple&logoColor=white" /></a>
-    <a href="https://github.com/ayangweb/BongoCat/releases"><img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" /></a>
-  </div>
+> 基于 [BongoCat](https://github.com/ayangweb/BongoCat) 进行个人定制的 Windows 桌面陪伴宠物。
 
-  <p>
-    <a href="./LICENSE"><img src="https://img.shields.io/github/license/ayangweb/BongoCat?style=flat-square" /></a>
-    <a href="https://github.com/ayangweb/BongoCat/releases/latest"><img src="https://img.shields.io/github/package-json/v/ayangweb/BongoCat?style=flat-square"/></a>
-    <a href="https://github.com/ayangweb/BongoCat/releases"><img src="https://img.shields.io/github/downloads/ayangweb/BongoCat/total?style=flat-square"/></a>
-  </p>
+labu-loom 是一个独立维护的个人定制化项目，在 ayangweb 开发的开源项目 BongoCat 基础上继续演进。项目保留了 BongoCat 的核心桌面宠物能力、Live2D 模型支持和输入动作映射，并围绕个人长期使用需求，重新设计产品定位、隐私边界、Windows 体验和后续陪伴能力。
 
-  <p>
-    <a href="https://trendshift.io/developers/8507" target="_blank"><img src="https://trendshift.io/api/badge/developers/8507" alt="ayangweb | Trendshift" width="250" height="55" /></a>
-    <a href="https://trendshift.io/repositories/14605" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14605" alt="ayangweb%2FBongoCat | Trendshift" width="250" height="55" /></a>
-    <a href="https://hellogithub.com/repository/7d23863fd4be47b39e816193ded385c9" target="_blank">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=7d23863fd4be47b39e816193ded385c9&claim_uid=5ihRVIuTYBmSGtQ&theme=dark" />
-        <source media="(prefers-color-scheme: light)" srcset="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=7d23863fd4be47b39e816193ded385c9&claim_uid=5ihRVIuTYBmSGtQ&theme=neutral" />
-        <img alt="Star History Chart" src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=7d23863fd4be47b39e816193ded385c9&claim_uid=5ihRVIuTYBmSGtQ&theme=neutral" width="250" height="55" />
-      </picture>
-    </a>
-  </p>
-</div>
+本项目不是 BongoCat 的官方版本，也不代表原作者的产品方向。感谢 BongoCat 作者和贡献者提供的开源基础；原项目许可证、版权声明和必要归属信息会持续保留。
 
-| macOS                                                                                        | Windows                                                                                        | Linux(x11)                                                                                   |
-| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| ![macOS](https://i0.hdslb.com/bfs/openplatform/dff276b96d49c5d6c431b74b531aab72191b3d87.png) | ![Windows](https://i0.hdslb.com/bfs/openplatform/a4149b753856ee7f401989da902cf3b5ad35b39e.png) | ![Linux](https://i0.hdslb.com/bfs/openplatform/3b49f961819d3ff63b2b80251c1cc13c27e986b0.png) |
+## 与 BongoCat 的关系
 
-## 赞助商
+labu-loom 直接基于 [ayangweb/BongoCat](https://github.com/ayangweb/BongoCat) 的代码开发。当前继承或继续使用的主要能力包括：
 
-<a href="https://www.toolsetlink.com">
-  <img height="54" alt="UpgradeLink" src="https://github.com/user-attachments/assets/6b84fb0f-3f1d-44b5-9932-2298bc999d8d" />
-</a>
+- 基于 Tauri、Vue 和 Rust 的桌面应用架构。
+- Live2D 模型加载、导入和动作映射能力。
+- 根据键盘、鼠标和手柄输入播放模型动作。
+- 透明、置顶的桌面宠物窗口及托盘、偏好设置等基础体验。
 
-## 开发背景
+在此基础上，labu-loom 已进行以下独立调整：
 
-本项目的灵感来源于 [MMmmmoko](https://github.com/MMmmmoko) 大佬开发的 [Bongo-Cat-Mver](https://github.com/MMmmmoko/Bongo-Cat-Mver)。它以独特的猫咪互动功能深受用户喜爱，但仅支持 Windows 平台。作为一名深度 macOS 用户，我特别希望在自己的设备上也能使用这款可爱的猫咪，于是我决定开发一个适配 macOS 的版本。
+- 使用独立的产品名称、应用标识、数据目录、仓库和发布链路。
+- 将 Windows 作为当前唯一必须完成实际验收的平台。
+- 增加可持久化的键盘与鼠标监听开关，并在关闭时停止处理输入事件。
+- 移除原项目的更新服务和发布配置，改用 labu-loom 自有的 GitHub Releases 与 Tauri 更新签名。
+- 将产品方向从输入动作展示扩展为低打扰、可长期使用的桌面陪伴宠物。
+- 建立明确的数据最小化和隐私边界，不持久化具体按键、输入内容或完整鼠标轨迹。
 
-同时，得益于 [Tauri](https://github.com/tauri-apps/tauri) 强大的跨平台能力，本项目不仅支持 macOS，还兼容 Windows 和 Linux(x11)，让更多的用户都能与这只可爱的猫咪互动！
+如果你需要 BongoCat 的原始功能、跨平台发行版本、社区资源或上游支持，请直接访问 [BongoCat 项目](https://github.com/ayangweb/BongoCat)。
 
-## 下载
+## 产品定位
 
-- [夸克网盘](https://pan.quark.cn/s/70f2f2663ce1)
-- [GitHub Releases](https://github.com/ayangweb/BongoCat/releases)
+labu-loom 希望陪伴用户度过重复、安静或需要持续专注的工作时间。宠物通过自然动作、状态变化和低频互动形成陪伴感，而不是持续占用注意力。
 
-不确定下载哪一个？请查阅[下载指南](.github/DOWNLOAD_GUIDE.md)。
+项目遵循以下原则：
 
-## 功能介绍
+- 核心体验是桌面陪伴，不是聊天机器人或效率管理工具。
+- 默认保持安静和低打扰，明确提醒必须由用户主动开启。
+- 不增加等级、经验、签到、强制任务或惩罚机制。
+- 核心动作反馈和陪伴能力应当能够离线运行。
+- 用户可以暂停输入监听，并对未来的记忆数据拥有查看、修改和清除能力。
 
-- 适配 macOS、Windows 和 Linux(x11)。
-- 根据键盘、鼠标或手柄的操作，同步对应的动作。
-- 支持导入自定义模型，自由打造专属猫咪形象。
-- 完全开源，代码公开透明，绝不收集任何用户数据。
-- 支持离线运行，无需联网，保护用户隐私。
+完整产品方向见 [产品规划](docs/产品规划.md)。
 
-## 模型转换
+## 当前状态
 
-如果你想将 Bongo-Cat-Mver 应用中的模型转换为兼容 BongoCat 的格式，可以使用以下工具：
+项目当前处于 `0.1` 工程与产品基线阶段，已完成：
 
-🔗 [在线转换](https://bongocat.vteamer.cc)
+- labu-loom 品牌、应用标识和本地数据身份隔离。
+- Node、pnpm 和 Rust 工具链版本固定。
+- Windows 透明窗口、托盘、偏好设置和单实例行为验收。
+- 键盘与鼠标监听的手动暂停和恢复。
+- GitHub Releases、Tauri updater 和专用更新签名配置。
+- Windows x64 NSIS 安装包的本地签名构建验证。
 
-## 更多模型
+首个正式 GitHub Release 尚未发布。陪伴行为引擎、选择式互动、活动聚合和长期记忆仍属于后续版本规划，不应视为当前已实现功能。
 
-你可以在这个仓库中探索、下载更多猫咪模型，或提交你的创作，与大家一起分享：
+## 数据与隐私
 
-📦 [Awesome-BongoCat](https://github.com/ayangweb/Awesome-BongoCat)
+labu-loom 只处理实现桌面宠物反馈所必需的数据：
 
-## 社区交流
+- 具体按键、按键序列、单次事件时间和完整鼠标轨迹只允许短暂存在于内存。
+- 不读取或记录屏幕内容、窗口标题、应用名称、文档内容和剪贴板内容。
+- 不将能够还原用户具体操作过程的原始输入事件写入磁盘。
+- 未来的活动统计只保存聚合结果，记忆功能必须支持查看、修改、分类清除和全部清除。
+- 未来同步功能必须默认关闭，并由用户主动开启。
 
-<table>
-  <thead>
-    <tr>
-      <th>QQ 群 1</th>
-      <th>QQ 群 2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <a href="https://qm.qq.com/q/AS3gNv2Vzy">
-          <picture>
-            <source
-              media="(prefers-color-scheme: dark)"
-              srcset="https://i0.hdslb.com/bfs/openplatform/8ecdc4982ab01b59d7731fcca3ec26631a274560.png"
-            />
-            <source
-              media="(prefers-color-scheme: light)"
-              srcset="https://i0.hdslb.com/bfs/openplatform/09f56580397063e1819c4c2ed63d07dee12720e1.png"
-            />
-            <img
-              alt="QQ Group 1"
-              src="https://i0.hdslb.com/bfs/openplatform/09f56580397063e1819c4c2ed63d07dee12720e1.png"
-              height="250"
-            />
-          </picture>
-        </a>
-      </td>
-      <td>
-        <a href="https://qm.qq.com/q/TmltLAod2O">
-          <picture>
-            <source
-              media="(prefers-color-scheme: dark)"
-              srcset="https://i0.hdslb.com/bfs/openplatform/473c522487ff33e0f32b15466aeb0734f17161c8.png"
-            />
-            <source
-              media="(prefers-color-scheme: light)"
-              srcset="https://i0.hdslb.com/bfs/openplatform/d5ae8c5af6ae1d0a1f066705ee822d1287384cf6.png"
-            />
-            <img
-              alt="QQ Group 2"
-              src="https://i0.hdslb.com/bfs/openplatform/d5ae8c5af6ae1d0a1f066705ee822d1287384cf6.png"
-              height="250"
-            />
-          </picture>
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+详细约束见 [数据与隐私边界](docs/数据与隐私边界.md)。
 
-## 赞赏
+## 本地开发
 
-每一份认可都值得被珍视！赞赏随缘，心意无价，谢谢你的支持 ❤️
+当前主要开发和验收环境为 Windows。
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://i0.hdslb.com/bfs/openplatform/e7438bff14cdfb6bfd0feacbb482f99ea4093294.png" />
-  <source media="(prefers-color-scheme: light)" srcset="https://i0.hdslb.com/bfs/openplatform/da55cc3ec1556580c91e59f589792866c998c7c6.png" />
-  <img alt="微信赞赏码" src="https://i0.hdslb.com/bfs/openplatform/da55cc3ec1556580c91e59f589792866c998c7c6.png" height="250" />
-</picture>
+准备工具链：
 
-## 贡献指南
+- Node.js 24.15.0
+- pnpm 11.19.0，通过 Corepack 使用
+- Rust 1.95.0
 
-感谢大家为 BongoCat 做出的宝贵贡献！如果你也希望为 BongoCat 做出贡献，请查阅[贡献指南](.github/CONTRIBUTING.md)。
+安装依赖并启动：
 
-<a href="https://openomy.com/ayangweb/BongoCat" target="_blank" style="display: block; width: 100%;" align="center">
-  <img src="https://openomy.com/svg?repo=ayangweb/BongoCat&chart=bubble" alt="Contribution Leaderboard" style="display: block; width: 100%;" />
-</a>
+```powershell
+corepack pnpm install --frozen-lockfile
+corepack pnpm tauri dev
+```
 
-## 历史星标
+基础检查：
 
-<a href="https://www.star-history.com/#ayangweb/BongoCat&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ayangweb/BongoCat&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ayangweb/BongoCat&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ayangweb/BongoCat&type=Date" />
- </picture>
-</a>
+```powershell
+corepack pnpm lint
+corepack pnpm build
+cargo fmt --all -- --check
+cargo check --workspace --locked
+cargo test --workspace --locked
+```
+
+工程、分支、验证和提交规则见 [开发规范](docs/开发规范.md)。
+
+## 发布与更新
+
+labu-loom 使用自己的 GitHub Releases 和 Tauri updater 签名，与 BongoCat 的发布及更新服务相互独立。
+
+- 正式仓库：[dengweiqiang22/labu-loom](https://github.com/dengweiqiang22/labu-loom)
+- 当前目标产物：Windows x64 NSIS 安装包
+- 更新方式：由用户在“关于软件”页面主动检查
+- Windows Authenticode：当前尚未启用，安装包可能出现 SmartScreen 提示
+
+发布流程和签名边界见 [发布与更新方案](docs/发布与更新方案.md)。
+
+## 文档
+
+- [产品规划](docs/产品规划.md)
+- [开发规范](docs/开发规范.md)
+- [数据与隐私边界](docs/数据与隐私边界.md)
+- [0.1 项目基线任务计划](docs/任务计划-0.1项目基线.md)
+- [发布与更新方案](docs/发布与更新方案.md)
+
+## 开源归属与许可证
+
+labu-loom 基于 [BongoCat](https://github.com/ayangweb/BongoCat) 修改和演进。BongoCat 的原始版权归原作者及贡献者所有：
+
+```text
+Copyright (c) 2025 ayangweb
+```
+
+本仓库继续遵循原项目的 MIT License。许可证全文见 [LICENSE](LICENSE)。使用、修改或再分发本项目时，请继续保留许可证要求的版权和许可声明。
+
+BongoCat 的开发灵感来源还包括 [MMmmmoko/Bongo-Cat-Mver](https://github.com/MMmmmoko/Bongo-Cat-Mver)，相关创意与上游贡献同样值得感谢。

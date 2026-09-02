@@ -1,65 +1,10 @@
-# 下载指南
+# labu-loom 下载与安装
 
-## 系统要求
+labu-loom 当前仅验收 Windows x64。
 
-- macOS 12 或更高版本。
-- Windows 10 或更高版本。
-- Linux 带有 X11 环境。
+1. 打开 [GitHub Releases](https://github.com/dengweiqiang22/labu-loom/releases)。
+2. 选择最新的正式版本。
+3. 下载 Windows x64 的 NSIS 安装程序（`.exe`）。
+4. 退出正在运行的旧版本后执行安装。
 
-## macOS
-
-### 手动下载
-
-- Apple Silicon：下载 `BongoCat_aarch64.dmg`
-- Intel Chip：下载 `BongoCat_x64.dmg`
-
-### Homebrew 下载
-
-1. 添加 BongoCat 的 tap 源：
-
-```bash
-brew tap ayangweb/BongoCat
-```
-
-2. 安装：
-
-```bash
-brew install --no-quarantine bongo-cat
-```
-
-3. 更新：
-
-```bash
-brew upgrade bongo-cat
-```
-
-4. 卸载：
-
-```bash
-brew uninstall --cask bongo-cat
-
-brew untap ayangweb/BongoCat
-```
-
-## Windows
-
-- 64 位系统：下载 `BongoCat_x64.exe`
-- 32 位系统：下载 `BongoCat_x86.exe`
-- ARM64 架构：下载 `BongoCat_arm64.exe`
-
-## Linux(X11)
-
-### 手动下载
-
-- 64 位系统：
-  - Debian / Ubuntu：下载 `BongoCat_amd64.deb`
-  - Fedora / RHEL：下载 `BongoCat_x86_64.rpm`
-  - 通用版本：下载 `BongoCat_amd64.AppImage`
-- ARM64 架构：
-  - Debian / Ubuntu：下载 `BongoCat_arm64.deb`
-  - Fedora / RHEL：下载 `BongoCat_aarch64.rpm`
-  - 通用版本：下载 `BongoCat_aarch64.AppImage`
-
-### AUR 下载
-
-- Manjaro / ArchLinux: `yay -S bongo-cat`
+发布页在签名密钥和首个正式版本准备完成前可能为空。不要从上游 BongoCat 的发布页获取 labu-loom 安装包，两者具有不同的应用标识、数据目录和更新签名。

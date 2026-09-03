@@ -14,6 +14,11 @@ export interface GamepadChangedEvent {
   value: number
 }
 
+export interface InputListenerFailure {
+  source: 'device' | 'gamepad'
+  message: string
+}
+
 export type InputEvent
   = | {
     source: 'keyboard'

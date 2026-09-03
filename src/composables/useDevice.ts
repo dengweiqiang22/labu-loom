@@ -5,7 +5,7 @@ import { isNil } from 'es-toolkit'
 import { Ticker } from 'pixi.js'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
-import type { CursorPoint, DeviceChangedEvent } from '@/domain/input'
+import type { CursorPoint, DeviceChangedEvent, InputListenerFailure } from '@/domain/input'
 
 import { normalizeDeviceEvent } from '@/domain/input'
 import { useAppStore } from '@/stores/app'
@@ -80,12 +80,18 @@ export function useDevice() {
     return Ticker.shared.add(tickerCallback)
   }, { immediate: true })
 
-  const startListening = () => {
-    invoke(INVOKE_KEY.START_DEVICE_LISTENING)
+  const startListening = async () => {
+    try {
+      await invoke(INVOKE_KEY.START_DEVICE_LISTENING)
+    } catch (error) {
+      console.error('Failed to start device listener', error)
+    }
   }
 
   watch(() => generalStore.app.inputListening, (enabled) => {
-    invoke(INVOKE_KEY.SET_DEVICE_LISTENING_ENABLED, { enabled })
+    void invoke(INVOKE_KEY.SET_DEVICE_LISTENING_ENABLED, { enabled }).catch((error) => {
+      console.error('Failed to change device listener state', error)
+    })
 
     if (enabled) return
 
@@ -215,6 +221,12 @@ export function useDevice() {
       case 'pointer':
         return latestCursorPoint.value = event.position
     }
+  })
+
+  useTauriListen<InputListenerFailure>(LISTEN_KEY.INPUT_LISTENER_FAILED, ({ payload }) => {
+    if (payload.source !== 'device') return
+
+    console.error('Device listener stopped unexpectedly', payload.message)
   })
 
   return {

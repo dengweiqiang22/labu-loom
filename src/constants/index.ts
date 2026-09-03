@@ -5,6 +5,7 @@ export const LISTEN_KEY = {
   HIDE_WINDOW: 'hide-window',
   DEVICE_CHANGED: 'device-changed',
   GAMEPAD_CHANGED: 'gamepad-changed',
+  INPUT_LISTENER_FAILED: 'input-listener-failed',
   START_MOTION: 'start-motion',
   SET_EXPRESSION: 'set-expression',
 }

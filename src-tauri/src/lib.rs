@@ -75,6 +75,10 @@ pub fn run() {
         .expect("error while running tauri application");
 
     app.run(|app_handle, event| match event {
+        tauri::RunEvent::ExitRequested { .. } => {
+            set_device_listening_enabled(false);
+            let _ = stop_gamepad_listing();
+        }
         #[cfg(target_os = "macos")]
         tauri::RunEvent::Reopen { .. } => {
             show_preference_window(app_handle);

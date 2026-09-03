@@ -10,6 +10,7 @@ import { normalizeGamepadEvent } from '@/domain/input'
 import { useModelStore } from '@/stores/model'
 import live2d from '@/utils/live2d'
 
+import { useActivityState } from './useActivityState'
 import { useModel } from './useModel'
 import { useTauriListen } from './useTauriListen'
 
@@ -31,6 +32,7 @@ const INITIAL_STICK_STATE: StickState = { x: 0, y: 0, moved: false, pressed: fal
 
 export function useGamepad() {
   const modelStore = useModelStore()
+  const { recordActivity } = useActivityState()
   const { handlePress, handleRelease, handleAxisChange } = useModel()
   const sticks = reactive<Sticks>({
     left: { ...INITIAL_STICK_STATE },
@@ -87,6 +89,8 @@ export function useGamepad() {
 
   useTauriListen<GamepadChangedEvent>(LISTEN_KEY.GAMEPAD_CHANGED, ({ payload }) => {
     const event = normalizeGamepadEvent(payload)
+
+    recordActivity(event)
     const name = event.control as GamepadEventName
     const { value } = event
 

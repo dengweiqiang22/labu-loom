@@ -1,7 +1,7 @@
 {
   "name": "labu-loom",
   "type": "module",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "packageManager": "pnpm@11.19.0",
   "author": "labu-loom contributors",
@@ -23,6 +23,8 @@
     "tauri": "tauri",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
+    "test": "run-s test:*",
+    "test:activity": "tsx --test tests/activity.test.ts",
     "test:input": "tsx --test tests/input.test.ts",
     "preinstall": "npx only-allow pnpm",
     "prepare": "simple-git-hooks",

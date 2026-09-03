@@ -12,6 +12,7 @@ import { round } from 'es-toolkit'
 import { nth } from 'es-toolkit/compat'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
+import { useActivityState } from '@/composables/useActivityState'
 import { useAppMenu } from '@/composables/useAppMenu'
 import { useDevice } from '@/composables/useDevice'
 import { useGamepad } from '@/composables/useGamepad'
@@ -29,6 +30,7 @@ import { isWindows } from '@/utils/platform'
 import { clearObject } from '@/utils/shared'
 
 const { startListening } = useDevice()
+const { startActivityTracking, stopActivityTracking } = useActivityState()
 const appWindow = getCurrentWebviewWindow()
 const { modelSize, handleLoad, handleDestroy, handleResize, handleKeyChange } = useModel()
 const catStore = useCatStore()
@@ -39,9 +41,15 @@ const resizing = ref(false)
 const backgroundImagePath = ref<string>()
 const { stickActive } = useGamepad()
 
-onMounted(startListening)
+onMounted(() => {
+  startActivityTracking()
+  void startListening()
+})
 
-onUnmounted(handleDestroy)
+onUnmounted(() => {
+  stopActivityTracking()
+  handleDestroy()
+})
 
 const debouncedResize = useDebounceFn(async () => {
   await handleResize()

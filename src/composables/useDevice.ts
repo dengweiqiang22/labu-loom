@@ -16,6 +16,7 @@ import { inBetween } from '@/utils/is'
 import { isMac, isWindows } from '@/utils/platform'
 
 import { INVOKE_KEY, LISTEN_KEY, WINDOW_LABEL } from '../constants'
+import { useActivityState } from './useActivityState'
 import { useModel } from './useModel'
 import { useTauriListen } from './useTauriListen'
 
@@ -31,6 +32,7 @@ export function useDevice() {
   const latestCursorPoint = ref<CursorPoint>()
   const smoothedCursorPoint = ref<CursorPoint>()
   const scaleFactor = ref(1)
+  const { recordActivity, resetActivity } = useActivityState()
   const { handlePress, handleRelease, handleMouseChange, handleMouseMove } = useModel()
 
   const tickerCallback = (ticker: Ticker) => {
@@ -100,6 +102,7 @@ export function useDevice() {
     }
 
     releaseTimers.clear()
+    resetActivity()
     latestCursorPoint.value = void 0
     smoothedCursorPoint.value = void 0
 
@@ -192,6 +195,8 @@ export function useDevice() {
 
   useTauriListen<DeviceChangedEvent>(LISTEN_KEY.DEVICE_CHANGED, ({ payload }) => {
     const event = normalizeDeviceEvent(payload)
+
+    recordActivity(event)
 
     if (event.source === 'keyboard') {
       const nextValue = getSupportedKey(event.control)

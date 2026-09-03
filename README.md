@@ -71,7 +71,7 @@ labu-loom 只处理实现桌面宠物反馈所必需的数据：
 
 准备工具链：
 
-- Node.js 24.15.0
+- Node.js 24.16.0
 - pnpm 11.19.0，通过 Corepack 使用
 - Rust 1.95.0
 

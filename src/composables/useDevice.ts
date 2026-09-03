@@ -5,6 +5,9 @@ import { isNil } from 'es-toolkit'
 import { Ticker } from 'pixi.js'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
+import type { CursorPoint, DeviceChangedEvent } from '@/domain/input'
+
+import { normalizeDeviceEvent } from '@/domain/input'
 import { useAppStore } from '@/stores/app'
 import { useCatStore } from '@/stores/cat'
 import { useGeneralStore } from '@/stores/general'
@@ -15,28 +18,6 @@ import { isMac, isWindows } from '@/utils/platform'
 import { INVOKE_KEY, LISTEN_KEY, WINDOW_LABEL } from '../constants'
 import { useModel } from './useModel'
 import { useTauriListen } from './useTauriListen'
-
-interface MouseButtonEvent {
-  kind: 'MousePress' | 'MouseRelease'
-  value: string
-}
-
-export interface CursorPoint {
-  x: number
-  y: number
-}
-
-interface MouseMoveEvent {
-  kind: 'MouseMove'
-  value: CursorPoint
-}
-
-interface KeyboardEvent {
-  kind: 'KeyboardPress' | 'KeyboardRelease'
-  value: string
-}
-
-type DeviceEvent = MouseButtonEvent | MouseMoveEvent | KeyboardEvent
 
 const DAMPING_DECAY = 0.75
 const appWindow = getCurrentWebviewWindow()
@@ -203,11 +184,11 @@ export function useDevice() {
     releaseTimers.set(key, timer)
   }
 
-  useTauriListen<DeviceEvent>(LISTEN_KEY.DEVICE_CHANGED, ({ payload }) => {
-    const { kind, value } = payload
+  useTauriListen<DeviceChangedEvent>(LISTEN_KEY.DEVICE_CHANGED, ({ payload }) => {
+    const event = normalizeDeviceEvent(payload)
 
-    if (kind === 'KeyboardPress' || kind === 'KeyboardRelease') {
-      const nextValue = getSupportedKey(value)
+    if (event.source === 'keyboard') {
+      const nextValue = getSupportedKey(event.control)
 
       if (!nextValue) return
 
@@ -215,7 +196,7 @@ export function useDevice() {
         return handleAutoRelease(nextValue)
       }
 
-      if (kind === 'KeyboardPress') {
+      if (event.phase === 'pressed') {
         if (isWindows) {
           const delay = catStore.model.autoReleaseDelay * 1000
 
@@ -228,13 +209,11 @@ export function useDevice() {
       return handleRelease(nextValue)
     }
 
-    switch (kind) {
-      case 'MousePress':
-        return handleMouseChange(value)
-      case 'MouseRelease':
-        return handleMouseChange(value, false)
-      case 'MouseMove':
-        return latestCursorPoint.value = value
+    switch (event.kind) {
+      case 'button':
+        return handleMouseChange(event.control, event.phase === 'pressed')
+      case 'pointer':
+        return latestCursorPoint.value = event.position
     }
   })
 

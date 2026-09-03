@@ -3,7 +3,10 @@ import type { LiteralUnion } from 'type-fest'
 import { invoke } from '@tauri-apps/api/core'
 import { computed, reactive, watch } from 'vue'
 
+import type { GamepadChangedEvent } from '@/domain/input'
+
 import { INVOKE_KEY, LISTEN_KEY } from '@/constants'
+import { normalizeGamepadEvent } from '@/domain/input'
 import { useModelStore } from '@/stores/model'
 import live2d from '@/utils/live2d'
 
@@ -11,12 +14,6 @@ import { useModel } from './useModel'
 import { useTauriListen } from './useTauriListen'
 
 type GamepadEventName = LiteralUnion<'LeftStickX' | 'LeftStickY' | 'RightStickX' | 'RightStickY' | 'LeftThumb' | 'RightThumb', string>
-
-interface GamepadEvent {
-  kind: 'ButtonChanged' | 'AxisChanged'
-  name: GamepadEventName
-  value: number
-}
 
 interface StickState {
   x: number
@@ -65,8 +62,10 @@ export function useGamepad() {
     live2d.setParameterValue('CatParamStickShowRightHand', moved || pressed)
   }, { deep: true })
 
-  useTauriListen<GamepadEvent>(LISTEN_KEY.GAMEPAD_CHANGED, ({ payload }) => {
-    const { name, value } = payload
+  useTauriListen<GamepadChangedEvent>(LISTEN_KEY.GAMEPAD_CHANGED, ({ payload }) => {
+    const event = normalizeGamepadEvent(payload)
+    const name = event.control as GamepadEventName
+    const { value } = event
 
     switch (name) {
       case 'LeftStickX':

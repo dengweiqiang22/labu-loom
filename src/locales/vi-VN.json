@@ -167,7 +167,7 @@
       "hints": {
         "checkingUpdates": "Đang kiểm tra cập nhật...",
         "alreadyLatest": "Bạn đang dùng phiên bản mới nhất 🎉",
-        "checkFailed": "Không thể kiểm tra cập nhật. Hãy kiểm tra kết nối mạng và thử lại sau."
+        "checkFailed": "Tạm thời không thể lấy thông tin cập nhật. Vui lòng thử lại sau."
       },
       "buttons": {
         "updateNow": "Cập nhật ngay",

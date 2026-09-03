@@ -167,7 +167,7 @@
       "hints": {
         "checkingUpdates": "Checking for updates...",
         "alreadyLatest": "Already on the latest version 🎉",
-        "checkFailed": "Unable to check for updates. Check your connection and try again later."
+        "checkFailed": "Unable to retrieve update information. Try again later."
       },
       "buttons": {
         "updateNow": "Update Now",

@@ -6,9 +6,11 @@ import { useI18n } from 'vue-i18n'
 import ProListItem from '@/components/pro-list-item/index.vue'
 import ProList from '@/components/pro-list/index.vue'
 import { useCatStore } from '@/stores/cat'
+import { useMemoryStore } from '@/stores/memory'
 import { isWindows } from '@/utils/platform'
 
 const catStore = useCatStore()
+const memoryStore = useMemoryStore()
 const { t } = useI18n()
 const companionModeOptions = computed(() => [
   { label: t('pages.preference.cat.options.quietMode'), value: 'quiet' },
@@ -32,6 +34,29 @@ const companionModeHint = computed(() => {
         block
         :options="companionModeOptions"
       />
+    </ProListItem>
+  </ProList>
+
+  <ProList :title="$t('pages.preference.cat.labels.interactionSettings')">
+    <ProListItem
+      :description="$t('pages.preference.cat.hints.interactionsEnabled')"
+      :title="$t('pages.preference.cat.labels.interactionsEnabled')"
+    >
+      <Switch v-model:checked="memoryStore.settings.interactionsEnabled" />
+    </ProListItem>
+
+    <ProListItem
+      :description="$t('pages.preference.cat.hints.keyboardStatsEnabled')"
+      :title="$t('pages.preference.cat.labels.keyboardStatsEnabled')"
+    >
+      <Switch v-model:checked="memoryStore.settings.keyboardStatsEnabled" />
+    </ProListItem>
+
+    <ProListItem
+      :description="$t('pages.preference.cat.hints.mouseStatsEnabled')"
+      :title="$t('pages.preference.cat.labels.mouseStatsEnabled')"
+    >
+      <Switch v-model:checked="memoryStore.settings.mouseStatsEnabled" />
     </ProListItem>
   </ProList>
 

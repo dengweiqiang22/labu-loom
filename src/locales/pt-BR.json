@@ -13,6 +13,10 @@
         "labels": {
           "companionSettings": "Configurações de Companhia",
           "companionMode": "Modo de Companhia",
+          "interactionSettings": "Interações e Estatísticas Locais",
+          "interactionsEnabled": "Interações por Escolha",
+          "keyboardStatsEnabled": "Estatísticas do Teclado",
+          "mouseStatsEnabled": "Estatísticas do Mouse",
           "modelSettings": "Configurações do Modelo",
           "mirrorMode": "Modo Espelho",
           "mouseMirror": "Espelho do Mouse",
@@ -39,6 +43,9 @@
         "hints": {
           "quietMode": "Responde apenas quando necessário, sem interações ou movimentos proativos e com menos animações não essenciais.",
           "companionMode": "Modo padrão de baixa interrupção, com comportamentos proativos pouco frequentes e movimento limitado nas proximidades.",
+          "interactionsEnabled": "Permite interações integradas por escolha, sem solicitar texto livre.",
+          "keyboardStatsEnabled": "Salva apenas a duração diária de atividade do teclado neste dispositivo, sem teclas, contagens ou horários de eventos.",
+          "mouseStatsEnabled": "Salva apenas a duração diária de atividade do mouse neste dispositivo, sem coordenadas, trajetórias ou horários de eventos.",
           "activeMode": "Aumenta a frequência de ações e movimentos, mantendo intervalos e limites por hora e por dia.",
           "mirrorMode": "Quando ativado, o modelo será invertido horizontalmente.",
           "mouseMirror": "Quando ativado, o mouse espelhará o movimento da mão.",

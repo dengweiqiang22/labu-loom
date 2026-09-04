@@ -13,6 +13,10 @@
         "labels": {
           "companionSettings": "Cài đặt đồng hành",
           "companionMode": "Chế độ đồng hành",
+          "interactionSettings": "Tương tác và thống kê cục bộ",
+          "interactionsEnabled": "Tương tác theo lựa chọn",
+          "keyboardStatsEnabled": "Thống kê hoạt động bàn phím",
+          "mouseStatsEnabled": "Thống kê hoạt động chuột",
           "modelSettings": "Cài đặt Mô hình",
           "mirrorMode": "Chế độ gương",
           "mouseMirror": "Phản chiếu chuột",
@@ -39,6 +43,9 @@
         "hints": {
           "quietMode": "Chỉ phản hồi khi cần thiết, không chủ động tương tác hoặc di chuyển và giảm các chuyển động không cần thiết.",
           "companionMode": "Chế độ ít làm phiền mặc định, cho phép hành vi chủ động thưa thớt và di chuyển giới hạn ở gần.",
+          "interactionsEnabled": "Cho phép tương tác tích hợp theo lựa chọn và không yêu cầu nhập văn bản tự do.",
+          "keyboardStatsEnabled": "Chỉ lưu thời lượng hoạt động bàn phím theo ngày trên thiết bị này, không lưu phím, số lần hoặc thời gian sự kiện.",
+          "mouseStatsEnabled": "Chỉ lưu thời lượng hoạt động chuột theo ngày trên thiết bị này, không lưu tọa độ, quỹ đạo hoặc thời gian sự kiện.",
           "activeMode": "Tăng tần suất hành động và di chuyển nhưng vẫn giữ thời gian chờ và giới hạn theo giờ, theo ngày.",
           "mirrorMode": "Bật để lật ngang mô hình.",
           "mouseMirror": "Khi bật, chuột của mô hình sẽ phản chiếu theo chuyển động chuột thực tế.",

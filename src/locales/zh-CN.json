@@ -13,6 +13,10 @@
         "labels": {
           "companionSettings": "陪伴设置",
           "companionMode": "陪伴模式",
+          "interactionSettings": "互动与本地统计",
+          "interactionsEnabled": "选择式互动",
+          "keyboardStatsEnabled": "键盘活动统计",
+          "mouseStatsEnabled": "鼠标活动统计",
           "modelSettings": "模型设置",
           "mirrorMode": "镜像模式",
           "mouseMirror": "鼠标镜像",
@@ -39,6 +43,9 @@
         "hints": {
           "quietMode": "只响应必要操作，不主动互动或移动，并减少非必要动效。",
           "companionMode": "默认的低打扰陪伴，允许低频主动行为和当前位置附近的有限移动。",
+          "interactionsEnabled": "允许宠物显示内置选择式互动；不会提供自由文字输入。",
+          "keyboardStatsEnabled": "开启后只在本地保存按日汇总的键盘活跃时长，不保存具体按键、次数或时间。",
+          "mouseStatsEnabled": "开启后只在本地保存按日汇总的鼠标活跃时长，不保存坐标、轨迹或时间。",
           "activeMode": "提高动作和移动频率，但仍保留冷却时间以及每小时、每日上限。",
           "mirrorMode": "启用后，模型将水平镜像翻转。",
           "mouseMirror": "启用后，鼠标将镜像跟随手部移动。",

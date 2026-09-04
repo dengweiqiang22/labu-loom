@@ -18,6 +18,7 @@ import { isMac, isWindows } from '@/utils/platform'
 
 import { INVOKE_KEY, LISTEN_KEY, WINDOW_LABEL } from '../constants'
 import { useActivityState } from './useActivityState'
+import { recordInputActivity } from './useDailyActivityAggregation'
 import { useModel } from './useModel'
 import { useTauriListen } from './useTauriListen'
 
@@ -199,6 +200,10 @@ export function useDevice() {
     const event = normalizeDeviceEvent(payload)
 
     recordActivity(event)
+
+    if (event.source === 'keyboard' || event.source === 'mouse') {
+      recordInputActivity(event.source)
+    }
 
     if (event.source === 'keyboard') {
       const nextValue = getSupportedKey(event.control)

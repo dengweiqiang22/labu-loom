@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
+import type { DailyActivityDelta } from '@/domain/memory/activity'
 import type { DailyActivitySummary, MemorySettings, StructuredMemory } from '@/domain/memory/schema'
 
 import { getLocalDay } from '@/domain/memory/day'
-import { DEFAULT_MEMORY_SETTINGS, MEMORY_SCHEMA_VERSION, migrateMemoryState } from '@/domain/memory/schema'
+import { DEFAULT_MEMORY_SETTINGS, MAX_DAILY_SUMMARIES, MEMORY_SCHEMA_VERSION, migrateMemoryState } from '@/domain/memory/schema'
 
 export const useMemoryStore = defineStore('memory', () => {
   const schemaVersion = ref(MEMORY_SCHEMA_VERSION)
@@ -53,9 +54,18 @@ export const useMemoryStore = defineStore('memory', () => {
 
     dailySummaries.value = [...dailySummaries.value, summary]
       .sort((left, right) => left.day.localeCompare(right.day))
-      .slice(-30)
+      .slice(-MAX_DAILY_SUMMARIES)
 
     return getDailySummary(day)!
+  }
+
+  function addDailyActivity(delta: DailyActivityDelta) {
+    const summary = getOrCreateDailySummary(delta.day)
+
+    summary.keyboardActiveSeconds += delta.keyboardActiveSeconds
+    summary.mouseActiveSeconds += delta.mouseActiveSeconds
+    summary.idleSeconds += delta.idleSeconds
+    summary.activeSessionCount += delta.activeSessionCount
   }
 
   function recordProactiveInteraction(kind: 'offered' | 'answered' | 'dismissed', day = getLocalDay()) {
@@ -73,6 +83,7 @@ export const useMemoryStore = defineStore('memory', () => {
     memories,
     init,
     clearAllData,
+    addDailyActivity,
     getDailySummary,
     getOrCreateDailySummary,
     recordProactiveInteraction,

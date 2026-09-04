@@ -15,6 +15,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useActivityState } from '@/composables/useActivityState'
 import { useAppMenu } from '@/composables/useAppMenu'
 import { useBehaviorScheduler } from '@/composables/useBehaviorScheduler'
+import { useDailyActivityAggregation } from '@/composables/useDailyActivityAggregation'
 import { useDevice } from '@/composables/useDevice'
 import { useFiniteMovement } from '@/composables/useFiniteMovement'
 import { useGamepad } from '@/composables/useGamepad'
@@ -35,6 +36,7 @@ import { isWindows } from '@/utils/platform'
 import { clearObject } from '@/utils/shared'
 
 const { startListening } = useDevice()
+const { startDailyActivityAggregation, stopDailyActivityAggregation } = useDailyActivityAggregation()
 const { startActivityTracking, stopActivityTracking } = useActivityState()
 const {
   resetBehaviorScheduling,
@@ -60,6 +62,7 @@ const { activeInteraction, dismissInteraction, openInteraction } = useInteractio
 
 onMounted(() => {
   startActivityTracking()
+  startDailyActivityAggregation()
   startBehaviorScheduling()
   startFiniteMovement()
   startProactiveInteraction()
@@ -71,6 +74,7 @@ onUnmounted(() => {
   stopFiniteMovement()
   stopProactiveInteraction()
   stopActivityTracking()
+  stopDailyActivityAggregation()
   handleDestroy()
 })
 

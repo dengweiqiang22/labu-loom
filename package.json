@@ -1,7 +1,7 @@
 {
   "name": "labu-loom",
   "type": "module",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": true,
   "packageManager": "pnpm@11.19.0",
   "author": "labu-loom contributors",
@@ -32,6 +32,7 @@
     "test:interaction": "tsx --test tests/interaction.test.ts",
     "test:interaction-scheduling": "tsx --test tests/interaction-scheduling.test.ts",
     "test:memory-schema": "tsx --test tests/memory-schema.test.ts",
+    "test:memory-activity": "tsx --test tests/memory-activity.test.ts",
     "verify:privacy": "node --experimental-strip-types scripts/verifyPrivacy.ts",
     "preinstall": "npx only-allow pnpm",
     "prepare": "simple-git-hooks",

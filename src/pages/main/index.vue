@@ -20,6 +20,7 @@ import { useFiniteMovement } from '@/composables/useFiniteMovement'
 import { useGamepad } from '@/composables/useGamepad'
 import { useInteraction } from '@/composables/useInteraction'
 import { useModel } from '@/composables/useModel'
+import { useProactiveInteraction } from '@/composables/useProactiveInteraction'
 import { useTauriListen } from '@/composables/useTauriListen'
 import { LISTEN_KEY } from '@/constants'
 import { hideWindow, setAlwaysOnTop, setTaskbarVisibility, showWindow } from '@/plugins/window'
@@ -37,12 +38,14 @@ const { startListening } = useDevice()
 const { startActivityTracking, stopActivityTracking } = useActivityState()
 const {
   resetBehaviorScheduling,
+  scheduleProactiveInteraction,
   scheduleProactiveTask,
   scheduleUserMotion,
   startBehaviorScheduling,
   stopBehaviorScheduling,
 } = useBehaviorScheduler()
 const { startFiniteMovement, stopFiniteMovement } = useFiniteMovement(scheduleProactiveTask)
+const { startProactiveInteraction, stopProactiveInteraction } = useProactiveInteraction(scheduleProactiveInteraction)
 const appWindow = getCurrentWebviewWindow()
 const { modelSize, handleLoad, handleDestroy, handleResize, handleKeyChange } = useModel()
 const catStore = useCatStore()
@@ -53,18 +56,20 @@ const memoryStore = useMemoryStore()
 const resizing = ref(false)
 const backgroundImagePath = ref<string>()
 const { stickActive } = useGamepad()
-const { activeInteraction, openInteraction } = useInteraction()
+const { activeInteraction, dismissInteraction, openInteraction } = useInteraction()
 
 onMounted(() => {
   startActivityTracking()
   startBehaviorScheduling()
   startFiniteMovement()
+  startProactiveInteraction()
   void startListening()
 })
 
 onUnmounted(() => {
   stopBehaviorScheduling()
   stopFiniteMovement()
+  stopProactiveInteraction()
   stopActivityTracking()
   handleDestroy()
 })
@@ -149,6 +154,17 @@ watch(() => catStore.window.passThrough, (value) => {
 watch(() => catStore.window.alwaysOnTop, setAlwaysOnTop, { immediate: true })
 
 watch([() => catStore.companion.mode, () => catStore.window.lockPosition], () => {
+  resetBehaviorScheduling()
+})
+
+watch([
+  () => memoryStore.settings.interactionsEnabled,
+  () => catStore.window.passThrough,
+  () => catStore.window.visible,
+], ([enabled, passThrough, visible]) => {
+  if (enabled && !passThrough && visible) return
+
+  dismissInteraction('aborted')
   resetBehaviorScheduling()
 })
 

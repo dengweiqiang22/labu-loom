@@ -3,6 +3,7 @@ import { readonly, ref } from 'vue'
 import type { InteractionChoiceId, InteractionTemplateId } from '@/domain/interaction/templates'
 
 import { getInteractionTemplate, isInteractionChoice } from '@/domain/interaction/templates'
+import { useMemoryStore } from '@/stores/memory'
 
 export type InteractionSource = 'user' | 'proactive'
 export type InteractionOutcome = 'answered' | 'dismissed' | 'aborted'
@@ -18,16 +19,45 @@ interface ActiveInteraction {
   templateId: InteractionTemplateId
   source: InteractionSource
   resolve: (result: InteractionResult) => void
+  removeAbortListener?: () => void
+  timeout?: ReturnType<typeof setTimeout>
 }
 
 const activeInteraction = ref<ActiveInteraction>()
+const INTERACTION_TIMEOUT_MS = 20_000
 
 export function useInteraction() {
-  function openInteraction(templateId: InteractionTemplateId, source: InteractionSource = 'user') {
+  const memoryStore = useMemoryStore()
+
+  function openInteraction(
+    templateId: InteractionTemplateId,
+    source: InteractionSource = 'user',
+    signal?: AbortSignal,
+  ) {
     if (activeInteraction.value) return
 
     return new Promise<InteractionResult>((resolve) => {
-      activeInteraction.value = { templateId, source, resolve }
+      const abort = () => dismissInteraction('aborted')
+
+      activeInteraction.value = {
+        templateId,
+        source,
+        resolve,
+        removeAbortListener: signal
+          ? () => signal.removeEventListener('abort', abort)
+          : undefined,
+        timeout: setTimeout(() => dismissInteraction('dismissed'), INTERACTION_TIMEOUT_MS),
+      }
+
+      if (source === 'proactive') memoryStore.recordProactiveInteraction('offered')
+
+      if (signal) {
+        if (signal.aborted) {
+          abort()
+        } else {
+          signal.addEventListener('abort', abort, { once: true })
+        }
+      }
     })
   }
 
@@ -41,13 +71,23 @@ export function useInteraction() {
 
     if (!choice || !isInteractionChoice(template, choiceId)) return
 
-    activeInteraction.value = void 0
-    active.resolve({
+    const outcome = choice.dismisses ? 'dismissed' : 'answered'
+    const result: InteractionResult = {
       templateId: active.templateId,
       source: active.source,
-      outcome: choice.dismisses ? 'dismissed' : 'answered',
+      outcome,
       choiceId: choice.id,
-    })
+    }
+
+    active.removeAbortListener?.()
+    clearTimeout(active.timeout)
+    activeInteraction.value = void 0
+
+    if (active.source === 'proactive') {
+      memoryStore.recordProactiveInteraction(outcome)
+    }
+
+    active.resolve(result)
   }
 
   function dismissInteraction(outcome: 'dismissed' | 'aborted' = 'dismissed') {
@@ -55,12 +95,21 @@ export function useInteraction() {
 
     if (!active) return
 
-    activeInteraction.value = void 0
-    active.resolve({
+    const result: InteractionResult = {
       templateId: active.templateId,
       source: active.source,
       outcome,
-    })
+    }
+
+    active.removeAbortListener?.()
+    clearTimeout(active.timeout)
+    activeInteraction.value = void 0
+
+    if (active.source === 'proactive' && outcome === 'dismissed') {
+      memoryStore.recordProactiveInteraction('dismissed')
+    }
+
+    active.resolve(result)
   }
 
   return {

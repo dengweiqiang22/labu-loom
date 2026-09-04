@@ -113,6 +113,28 @@ export function useBehaviorScheduler() {
     return result.status
   }
 
+  function scheduleProactiveInteraction(
+    name: string,
+    run: (signal: AbortSignal) => Promise<void>,
+    cooldownMultiplier = 1,
+  ) {
+    const minimumInterval = companionModePolicy.value.minimumActionIntervalMs ?? 0
+    const result = scheduler.request({
+      id: `proactive-interaction-${name}`,
+      payload: { kind: 'task', run },
+      priority: 'ambient',
+      proactive: true,
+      frequency: 'interaction',
+      resumable: false,
+      cooldownKey: `interaction:${name}`,
+      cooldownMs: minimumInterval * Math.max(1, cooldownMultiplier),
+    }, companionModePolicy.value)
+
+    if (result.status === 'started') play(result.started)
+
+    return result.status
+  }
+
   function cancelTasks() {
     for (const controller of taskControllers.values()) {
       controller.abort()
@@ -149,6 +171,7 @@ export function useBehaviorScheduler() {
   return {
     resetBehaviorScheduling,
     scheduleProactiveMotion,
+    scheduleProactiveInteraction,
     scheduleProactiveTask,
     scheduleUserMotion,
     startBehaviorScheduling,

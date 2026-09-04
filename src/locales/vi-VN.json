@@ -11,6 +11,8 @@
       "cat": {
         "title": "Mèo",
         "labels": {
+          "companionSettings": "Cài đặt đồng hành",
+          "companionMode": "Chế độ đồng hành",
           "modelSettings": "Cài đặt Mô hình",
           "mirrorMode": "Chế độ gương",
           "mouseMirror": "Phản chiếu chuột",
@@ -28,7 +30,15 @@
           "hideOnHover": "Ẩn khi di chuột",
           "maxFPS": "Tốc độ khung hình tối đa"
         },
+        "options": {
+          "quietMode": "Yên tĩnh",
+          "companionMode": "Đồng hành",
+          "activeMode": "Năng động"
+        },
         "hints": {
+          "quietMode": "Chỉ phản hồi khi cần thiết, không chủ động tương tác hoặc di chuyển và giảm các chuyển động không cần thiết.",
+          "companionMode": "Chế độ ít làm phiền mặc định, cho phép hành vi chủ động thưa thớt và di chuyển giới hạn ở gần.",
+          "activeMode": "Tăng tần suất hành động và di chuyển nhưng vẫn giữ thời gian chờ và giới hạn theo giờ, theo ngày.",
           "mirrorMode": "Bật để lật ngang mô hình.",
           "mouseMirror": "Khi bật, chuột của mô hình sẽ phản chiếu theo chuyển động chuột thực tế.",
           "ignoreMouse": "Khi bật, mô hình sẽ không phản hồi sự kiện chuột. Hữu ích cho chế độ bàn phím hoặc chế độ tay cầm.",

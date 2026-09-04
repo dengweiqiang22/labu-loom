@@ -11,6 +11,8 @@
       "cat": {
         "title": "Cat",
         "labels": {
+          "companionSettings": "Companion Settings",
+          "companionMode": "Companion Mode",
           "modelSettings": "Model Settings",
           "mirrorMode": "Mirror Mode",
           "mouseMirror": "Mouse Mirror",
@@ -28,7 +30,15 @@
           "hideOnHover": "Hide on Hover",
           "maxFPS": "Max Frame Rate"
         },
+        "options": {
+          "quietMode": "Quiet",
+          "companionMode": "Companion",
+          "activeMode": "Active"
+        },
         "hints": {
+          "quietMode": "Responds only when needed, with no proactive interactions or movement and fewer nonessential motions.",
+          "companionMode": "The default low-interruption mode, allowing infrequent proactive behavior and limited nearby movement.",
+          "activeMode": "Increases motion and movement frequency while keeping cooldowns and hourly and daily limits.",
           "mirrorMode": "When enabled, the model will be mirrored horizontally.",
           "mouseMirror": "When enabled, the mouse will mirror the hand movement.",
           "ignoreMouse": "When enabled, the model will not respond to mouse events. Useful for keyboard mode or gamepad mode.",

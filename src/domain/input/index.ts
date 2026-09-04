@@ -47,6 +47,8 @@ export type InputEvent
     value: number
   }
 
+export type GamepadInputEvent = Extract<InputEvent, { source: 'gamepad' }>
+
 export function normalizeDeviceEvent(event: DeviceChangedEvent): InputEvent {
   switch (event.kind) {
     case 'KeyboardPress':
@@ -81,7 +83,7 @@ export function normalizeDeviceEvent(event: DeviceChangedEvent): InputEvent {
       }
   }
 }
-export function normalizeGamepadEvent(event: GamepadChangedEvent): InputEvent {
+export function normalizeGamepadEvent(event: GamepadChangedEvent): GamepadInputEvent {
   return {
     source: 'gamepad',
     kind: event.kind === 'AxisChanged' ? 'axis' : 'button',

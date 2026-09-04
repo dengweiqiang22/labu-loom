@@ -11,6 +11,8 @@
       "cat": {
         "title": "貓咪設定",
         "labels": {
+          "companionSettings": "陪伴設定",
+          "companionMode": "陪伴模式",
           "modelSettings": "模型設定",
           "mirrorMode": "鏡像模式",
           "mouseMirror": "滑鼠游標鏡像",
@@ -28,7 +30,15 @@
           "hideOnHover": "滑鼠游標移入隱藏",
           "maxFPS": "最大幀率"
         },
+        "options": {
+          "quietMode": "安靜",
+          "companionMode": "陪伴",
+          "activeMode": "活躍"
+        },
         "hints": {
+          "quietMode": "只回應必要操作，不主動互動或移動，並減少非必要動效。",
+          "companionMode": "預設的低干擾陪伴，允許低頻主動行為和目前位置附近的有限移動。",
+          "activeMode": "提高動作和移動頻率，但仍保留冷卻時間以及每小時、每日上限。",
           "mirrorMode": "啟用後，模型將水平鏡像翻轉。",
           "mouseMirror": "啟用後，滑鼠游標將鏡像跟隨手部移動。",
           "ignoreMouse": "啟用後，模型將不再回應滑鼠事件，適用於鍵盤模式或手柄模式。",

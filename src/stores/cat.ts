@@ -1,7 +1,14 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
+import type { CompanionMode } from '@/domain/behavior/mode'
+
+import { DEFAULT_COMPANION_MODE, normalizeCompanionMode } from '@/domain/behavior/mode'
+
 export interface CatStore {
+  companion: {
+    mode: CompanionMode
+  }
   model: {
     mirror: boolean
     mouseMirror: boolean
@@ -48,6 +55,10 @@ export const useCatStore = defineStore('cat', () => {
   /** @deprecated 用于标识数据是否已迁移，后续版本将删除 */
   const migrated = ref(false)
 
+  const companion = reactive<CatStore['companion']>({
+    mode: DEFAULT_COMPANION_MODE,
+  })
+
   const model = reactive<CatStore['model']>({
     mirror: false,
     mouseMirror: false,
@@ -71,6 +82,8 @@ export const useCatStore = defineStore('cat', () => {
   })
 
   const init = () => {
+    companion.mode = normalizeCompanionMode(companion.mode)
+
     if (migrated.value) return
 
     model.mirror = mirrorMode.value
@@ -87,6 +100,7 @@ export const useCatStore = defineStore('cat', () => {
 
   return {
     migrated,
+    companion,
     model,
     window,
     init,

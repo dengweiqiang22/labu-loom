@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { Divider, Flex, InputNumber, Slider, SpaceAddon, SpaceCompact, Switch } from 'antdv-next'
+import { Divider, Flex, InputNumber, Segmented, Slider, SpaceAddon, SpaceCompact, Switch } from 'antdv-next'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ProListItem from '@/components/pro-list-item/index.vue'
 import ProList from '@/components/pro-list/index.vue'
@@ -7,9 +9,32 @@ import { useCatStore } from '@/stores/cat'
 import { isWindows } from '@/utils/platform'
 
 const catStore = useCatStore()
+const { t } = useI18n()
+const companionModeOptions = computed(() => [
+  { label: t('pages.preference.cat.options.quietMode'), value: 'quiet' },
+  { label: t('pages.preference.cat.options.companionMode'), value: 'companion' },
+  { label: t('pages.preference.cat.options.activeMode'), value: 'active' },
+])
+const companionModeHint = computed(() => {
+  return t(`pages.preference.cat.hints.${catStore.companion.mode}Mode`)
+})
 </script>
 
 <template>
+  <ProList :title="$t('pages.preference.cat.labels.companionSettings')">
+    <ProListItem
+      :description="companionModeHint"
+      :title="$t('pages.preference.cat.labels.companionMode')"
+      vertical
+    >
+      <Segmented
+        v-model:value="catStore.companion.mode"
+        block
+        :options="companionModeOptions"
+      />
+    </ProListItem>
+  </ProList>
+
   <ProList :title="$t('pages.preference.cat.labels.modelSettings')">
     <ProListItem
       :description="$t('pages.preference.cat.hints.mirrorMode')"

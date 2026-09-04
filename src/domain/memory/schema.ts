@@ -1,7 +1,8 @@
 import type { CompanionMode } from '@/domain/behavior/mode'
 
-export const MEMORY_SCHEMA_VERSION = 1
+export const MEMORY_SCHEMA_VERSION = 2
 export const MAX_DAILY_SUMMARIES = 30
+export const MAX_WEEKLY_SUMMARIES = 53
 
 export interface MemorySettings {
   interactionsEnabled: boolean
@@ -11,6 +12,30 @@ export interface MemorySettings {
 
 export interface DailyActivitySummary {
   day: string
+  keyboardActiveSeconds: number
+  mouseActiveSeconds: number
+  idleSeconds: number
+  activeSessionCount: number
+  interactionsOffered: number
+  interactionsAnswered: number
+  interactionsDismissed: number
+}
+
+export interface WeeklyActivitySummary {
+  weekStart: string
+  daysCovered: number
+  keyboardActiveSeconds: number
+  mouseActiveSeconds: number
+  idleSeconds: number
+  activeSessionCount: number
+  interactionsOffered: number
+  interactionsAnswered: number
+  interactionsDismissed: number
+}
+
+export interface MonthlyActivityTrend {
+  month: string
+  daysCovered: number
   keyboardActiveSeconds: number
   mouseActiveSeconds: number
   idleSeconds: number
@@ -41,6 +66,8 @@ export interface MemoryState {
   schemaVersion: number
   settings: MemorySettings
   dailySummaries: DailyActivitySummary[]
+  weeklySummaries: WeeklyActivitySummary[]
+  monthlyTrends: MonthlyActivityTrend[]
   memories: StructuredMemory[]
 }
 
@@ -51,6 +78,7 @@ export const DEFAULT_MEMORY_SETTINGS: Readonly<MemorySettings> = Object.freeze({
 })
 
 const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/
+const MONTH_PATTERN = /^\d{4}-(?:0[1-9]|1[0-2])$/
 const MEMORY_CATEGORIES = new Set<MemoryCategory>(['habit', 'preference', 'context', 'relationship'])
 const MEMORY_KINDS = new Set<MemoryKind>(['preferred-companion-mode', 'preferred-interaction-frequency', 'often-active-period'])
 const MEMORY_VALUES = new Set<MemoryValue>(['quiet', 'companion', 'active', 'less', 'same', 'more', 'morning', 'afternoon', 'evening'])
@@ -100,6 +128,41 @@ function normalizeDailySummary(value: unknown): DailyActivitySummary | undefined
   }
 }
 
+function normalizeAggregateCounts(input: Record<string, unknown>) {
+  return {
+    daysCovered: asCount(input.daysCovered),
+    keyboardActiveSeconds: asCount(input.keyboardActiveSeconds),
+    mouseActiveSeconds: asCount(input.mouseActiveSeconds),
+    idleSeconds: asCount(input.idleSeconds),
+    activeSessionCount: asCount(input.activeSessionCount),
+    interactionsOffered: asCount(input.interactionsOffered),
+    interactionsAnswered: asCount(input.interactionsAnswered),
+    interactionsDismissed: asCount(input.interactionsDismissed),
+  }
+}
+
+function normalizeWeeklySummary(value: unknown): WeeklyActivitySummary | undefined {
+  const input = asRecord(value)
+
+  if (!isDay(input.weekStart)) return
+
+  return {
+    weekStart: input.weekStart,
+    ...normalizeAggregateCounts(input),
+  }
+}
+
+function normalizeMonthlyTrend(value: unknown): MonthlyActivityTrend | undefined {
+  const input = asRecord(value)
+
+  if (typeof input.month !== 'string' || !MONTH_PATTERN.test(input.month)) return
+
+  return {
+    month: input.month,
+    ...normalizeAggregateCounts(input),
+  }
+}
+
 function normalizeMemory(value: unknown): StructuredMemory | undefined {
   const input = asRecord(value)
 
@@ -143,6 +206,19 @@ export function migrateMemoryState(value: unknown): MemoryState {
   const memories = Array.isArray(input.memories)
     ? input.memories.map(normalizeMemory).filter(memory => memory !== void 0)
     : []
+  const weeklySummaries = Array.isArray(input.weeklySummaries)
+    ? input.weeklySummaries
+        .map(normalizeWeeklySummary)
+        .filter(summary => summary !== void 0)
+        .sort((left, right) => left.weekStart.localeCompare(right.weekStart))
+        .slice(-MAX_WEEKLY_SUMMARIES)
+    : []
+  const monthlyTrends = Array.isArray(input.monthlyTrends)
+    ? input.monthlyTrends
+        .map(normalizeMonthlyTrend)
+        .filter(trend => trend !== void 0)
+        .sort((left, right) => left.month.localeCompare(right.month))
+    : []
 
   return {
     schemaVersion: MEMORY_SCHEMA_VERSION,
@@ -152,6 +228,8 @@ export function migrateMemoryState(value: unknown): MemoryState {
       mouseStatsEnabled: asBoolean(settings.mouseStatsEnabled, DEFAULT_MEMORY_SETTINGS.mouseStatsEnabled),
     },
     dailySummaries,
+    weeklySummaries,
+    monthlyTrends,
     memories,
   }
 }

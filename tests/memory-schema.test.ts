@@ -13,6 +13,8 @@ test('uses privacy-first defaults for a new memory store', () => {
       mouseStatsEnabled: false,
     },
     dailySummaries: [],
+    weeklySummaries: [],
+    monthlyTrends: [],
     memories: [],
   })
 })

@@ -2,8 +2,9 @@ import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
 import type { DailyActivityDelta } from '@/domain/memory/activity'
-import type { DailyActivitySummary, MemorySettings, StructuredMemory } from '@/domain/memory/schema'
+import type { DailyActivitySummary, MemorySettings, MonthlyActivityTrend, StructuredMemory, WeeklyActivitySummary } from '@/domain/memory/schema'
 
+import { compressMemoryAggregates } from '@/domain/memory/compression'
 import { getLocalDay } from '@/domain/memory/day'
 import { DEFAULT_MEMORY_SETTINGS, MAX_DAILY_SUMMARIES, MEMORY_SCHEMA_VERSION, migrateMemoryState } from '@/domain/memory/schema'
 
@@ -11,6 +12,8 @@ export const useMemoryStore = defineStore('memory', () => {
   const schemaVersion = ref(MEMORY_SCHEMA_VERSION)
   const settings = reactive<MemorySettings>({ ...DEFAULT_MEMORY_SETTINGS })
   const dailySummaries = ref<DailyActivitySummary[]>([])
+  const weeklySummaries = ref<WeeklyActivitySummary[]>([])
+  const monthlyTrends = ref<MonthlyActivityTrend[]>([])
   const memories = ref<StructuredMemory[]>([])
 
   function init() {
@@ -18,17 +21,24 @@ export const useMemoryStore = defineStore('memory', () => {
       schemaVersion: schemaVersion.value,
       settings,
       dailySummaries: dailySummaries.value,
+      weeklySummaries: weeklySummaries.value,
+      monthlyTrends: monthlyTrends.value,
       memories: memories.value,
     })
 
     schemaVersion.value = migrated.schemaVersion
     Object.assign(settings, migrated.settings)
     dailySummaries.value = migrated.dailySummaries
+    weeklySummaries.value = migrated.weeklySummaries
+    monthlyTrends.value = migrated.monthlyTrends
     memories.value = migrated.memories
+    compressAggregates()
   }
 
   function clearAllData() {
     dailySummaries.value = []
+    weeklySummaries.value = []
+    monthlyTrends.value = []
     memories.value = []
   }
 
@@ -54,9 +64,23 @@ export const useMemoryStore = defineStore('memory', () => {
 
     dailySummaries.value = [...dailySummaries.value, summary]
       .sort((left, right) => left.day.localeCompare(right.day))
-      .slice(-MAX_DAILY_SUMMARIES)
+
+    compressAggregates(day)
+    dailySummaries.value = dailySummaries.value.slice(-MAX_DAILY_SUMMARIES)
 
     return getDailySummary(day)!
+  }
+
+  function compressAggregates(referenceDay = getLocalDay()) {
+    const compressed = compressMemoryAggregates({
+      dailySummaries: dailySummaries.value,
+      weeklySummaries: weeklySummaries.value,
+      monthlyTrends: monthlyTrends.value,
+    }, referenceDay)
+
+    dailySummaries.value = compressed.dailySummaries
+    weeklySummaries.value = compressed.weeklySummaries
+    monthlyTrends.value = compressed.monthlyTrends
   }
 
   function addDailyActivity(delta: DailyActivityDelta) {
@@ -80,10 +104,13 @@ export const useMemoryStore = defineStore('memory', () => {
     schemaVersion,
     settings,
     dailySummaries,
+    weeklySummaries,
+    monthlyTrends,
     memories,
     init,
     clearAllData,
     addDailyActivity,
+    compressAggregates,
     getDailySummary,
     getOrCreateDailySummary,
     recordProactiveInteraction,

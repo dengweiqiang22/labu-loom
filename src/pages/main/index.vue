@@ -16,6 +16,7 @@ import { useActivityState } from '@/composables/useActivityState'
 import { useAppMenu } from '@/composables/useAppMenu'
 import { useBehaviorScheduler } from '@/composables/useBehaviorScheduler'
 import { useDevice } from '@/composables/useDevice'
+import { useFiniteMovement } from '@/composables/useFiniteMovement'
 import { useGamepad } from '@/composables/useGamepad'
 import { useModel } from '@/composables/useModel'
 import { useTauriListen } from '@/composables/useTauriListen'
@@ -34,10 +35,12 @@ const { startListening } = useDevice()
 const { startActivityTracking, stopActivityTracking } = useActivityState()
 const {
   resetBehaviorScheduling,
+  scheduleProactiveTask,
   scheduleUserMotion,
   startBehaviorScheduling,
   stopBehaviorScheduling,
 } = useBehaviorScheduler()
+const { startFiniteMovement, stopFiniteMovement } = useFiniteMovement(scheduleProactiveTask)
 const appWindow = getCurrentWebviewWindow()
 const { modelSize, handleLoad, handleDestroy, handleResize, handleKeyChange } = useModel()
 const catStore = useCatStore()
@@ -51,11 +54,13 @@ const { stickActive } = useGamepad()
 onMounted(() => {
   startActivityTracking()
   startBehaviorScheduling()
+  startFiniteMovement()
   void startListening()
 })
 
 onUnmounted(() => {
   stopBehaviorScheduling()
+  stopFiniteMovement()
   stopActivityTracking()
   handleDestroy()
 })
@@ -139,6 +144,10 @@ watch(() => catStore.window.passThrough, (value) => {
 
 watch(() => catStore.window.alwaysOnTop, setAlwaysOnTop, { immediate: true })
 
+watch([() => catStore.companion.mode, () => catStore.window.lockPosition], () => {
+  resetBehaviorScheduling()
+})
+
 watch(() => generalStore.app.taskbarVisible, setTaskbarVisibility, { immediate: true })
 
 watch(() => catStore.model.motionSound, live2d.setMotionSoundEnabled, { immediate: true })
@@ -154,6 +163,7 @@ useTauriListen<number>(LISTEN_KEY.SET_EXPRESSION, ({ payload }) => {
 })
 
 function handleMouseDown() {
+  resetBehaviorScheduling()
   appWindow.startDragging()
 }
 

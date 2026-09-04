@@ -1,7 +1,7 @@
 {
   "name": "labu-loom",
   "type": "module",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "private": true,
   "packageManager": "pnpm@11.19.0",
   "author": "labu-loom contributors",
@@ -26,6 +26,7 @@
     "test": "run-s test:*",
     "test:activity": "tsx --test tests/activity.test.ts",
     "test:behavior": "tsx --test tests/behavior-mode.test.ts",
+    "test:behavior-movement": "tsx --test tests/behavior-movement.test.ts",
     "test:behavior-scheduler": "tsx --test tests/behavior-scheduler.test.ts",
     "test:input": "tsx --test tests/input.test.ts",
     "preinstall": "npx only-allow pnpm",
@@ -93,6 +94,6 @@
     "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
-    "*": "eslint --fix"
+    "*.{js,jsx,mjs,cjs,ts,tsx,vue,json,json5}": "eslint --fix"
   }
 }

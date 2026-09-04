@@ -7,6 +7,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 import type { CursorPoint, DeviceChangedEvent, InputListenerFailure } from '@/domain/input'
 
+import { currentWindowPosition } from '@/composables/useWindowState'
 import { normalizeDeviceEvent } from '@/domain/input'
 import { useAppStore } from '@/stores/app'
 import { useCatStore } from '@/stores/cat'
@@ -135,7 +136,8 @@ export function useDevice() {
     let wasInWindow = false
 
     return (x: number, y: number) => {
-      const { x: winX, y: winY, width, height } = appStore.windowState[WINDOW_LABEL.MAIN] ?? {}
+      const { width, height } = appStore.windowState[WINDOW_LABEL.MAIN] ?? {}
+      const { x: winX, y: winY } = currentWindowPosition.value ?? {}
 
       if (isNil(winX) || isNil(winY) || isNil(width) || isNil(height)) return
 

@@ -5,7 +5,7 @@ import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { availableMonitors } from '@tauri-apps/api/window'
 import { useDebounceFn } from '@vueuse/core'
 import { isNumber } from 'es-toolkit/compat'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, shallowRef, watch } from 'vue'
 
 import { WINDOW_LABEL } from '@/constants'
 import { useAppStore } from '@/stores/app'
@@ -16,6 +16,12 @@ export type WindowState = Record<string, Partial<PhysicalPosition & PhysicalSize
 
 const appWindow = getCurrentWebviewWindow()
 const { label } = appWindow
+let automaticMovement = false
+export const currentWindowPosition = shallowRef<PhysicalPosition>()
+
+export function setAutomaticWindowMovement(active: boolean) {
+  automaticMovement = active
+}
 
 export function useWindowState() {
   const appStore = useAppStore()
@@ -23,9 +29,9 @@ export function useWindowState() {
   const isRestored = ref(false)
 
   onMounted(() => {
-    appWindow.onMoved(onChange)
+    appWindow.onMoved(onMoved)
 
-    appWindow.onResized(onChange)
+    appWindow.onResized(onResized)
 
     appWindow.onScaleChanged(clampToMonitor)
   })
@@ -56,10 +62,28 @@ export function useWindowState() {
 
   watch(() => catStore.window.keepInScreen, clampToMonitor)
 
-  const onChange = async (event: Event<PhysicalPosition | PhysicalSize>) => {
+  const shouldPersistChange = async () => {
     const minimized = await appWindow.isMinimized()
 
-    if (minimized) return
+    return !minimized
+  }
+
+  const onMoved = async (event: Event<PhysicalPosition>) => {
+    if (!await shouldPersistChange()) return
+
+    currentWindowPosition.value = event.payload
+
+    if (automaticMovement) return
+
+    appStore.windowState[label] ??= {}
+
+    Object.assign(appStore.windowState[label], event.payload)
+
+    clampToMonitor()
+  }
+
+  const onResized = async (event: Event<PhysicalSize>) => {
+    if (!await shouldPersistChange()) return
 
     appStore.windowState[label] ??= {}
 
@@ -87,6 +111,8 @@ export function useWindowState() {
         await appWindow.setPosition(new PhysicalPosition(x, y))
       }
     }
+
+    currentWindowPosition.value = await appWindow.outerPosition()
 
     if (width && height) {
       await appWindow.setSize(new PhysicalSize(width, height))

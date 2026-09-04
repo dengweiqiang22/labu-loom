@@ -148,6 +148,13 @@ const companionModeHint = computed(() => {
     </ProListItem>
 
     <ProListItem
+      :description="$t('pages.preference.cat.hints.lockPosition')"
+      :title="$t('pages.preference.cat.labels.lockPosition')"
+    >
+      <Switch v-model:checked="catStore.window.lockPosition" />
+    </ProListItem>
+
+    <ProListItem
       :description="$t('pages.preference.cat.hints.windowSize')"
       :title="$t('pages.preference.cat.labels.windowSize')"
     >

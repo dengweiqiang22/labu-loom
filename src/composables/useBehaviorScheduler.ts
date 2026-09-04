@@ -8,18 +8,41 @@ import { useCompanionMode } from '@/composables/useCompanionMode'
 import { BehaviorScheduler } from '@/domain/behavior/scheduler'
 import live2d from '@/utils/live2d'
 
-const scheduler = new BehaviorScheduler<MotionInfo>()
+type BehaviorPayload
+  = { kind: 'motion', motion: MotionInfo }
+    | { kind: 'task', run: (signal: AbortSignal) => Promise<void> }
+
+const scheduler = new BehaviorScheduler<BehaviorPayload>()
 const SCHEDULER_TICK_MS = 1_000
 
 let requestSequence = 0
 let updateTimer: ReturnType<typeof setInterval> | undefined
+const taskControllers = new Map<string, AbortController>()
 
 export function useBehaviorScheduler() {
   const { companionModePolicy } = useCompanionMode()
 
-  function play(behavior: ScheduledBehavior<MotionInfo>, force = false) {
-    const started = live2d.startMotion(behavior.payload, {
-      priority: force ? Priority.Force : Priority.Normal,
+  function play(behavior: ScheduledBehavior<BehaviorPayload>, interrupted?: ScheduledBehavior<BehaviorPayload>) {
+    if (interrupted?.payload.kind === 'task') {
+      taskControllers.get(interrupted.id)?.abort()
+    }
+
+    if (behavior.payload.kind === 'task') {
+      const controller = new AbortController()
+
+      taskControllers.set(behavior.id, controller)
+      void behavior.payload.run(controller.signal)
+        .catch(() => void 0)
+        .finally(() => {
+          taskControllers.delete(behavior.id)
+          finish(behavior.id)
+        })
+
+      return
+    }
+
+    const started = live2d.startMotion(behavior.payload.motion, {
+      priority: interrupted ? Priority.Force : Priority.Normal,
       onFinished: () => finish(behavior.id),
     })
 
@@ -42,13 +65,13 @@ export function useBehaviorScheduler() {
 
     const result = scheduler.request({
       id: `user-motion-${requestSequence}`,
-      payload: motion,
+      payload: { kind: 'motion', motion },
       priority: 'user',
       resumable: false,
     }, companionModePolicy.value)
 
     if (result.status === 'started') {
-      play(result.started, result.interrupted !== void 0)
+      play(result.started, result.interrupted)
     }
 
     return result.status
@@ -59,7 +82,7 @@ export function useBehaviorScheduler() {
 
     const result = scheduler.request({
       id: `proactive-motion-${requestSequence}`,
-      payload: motion,
+      payload: { kind: 'motion', motion },
       priority: 'ambient',
       proactive: true,
       frequency: interaction ? 'interaction' : 'action',
@@ -71,6 +94,31 @@ export function useBehaviorScheduler() {
     if (result.status === 'started') play(result.started)
 
     return result.status
+  }
+
+  function scheduleProactiveTask(name: string, run: (signal: AbortSignal) => Promise<void>) {
+    const result = scheduler.request({
+      id: `proactive-${name}`,
+      payload: { kind: 'task', run },
+      priority: 'ambient',
+      proactive: true,
+      frequency: 'action',
+      resumable: false,
+      cooldownKey: `task:${name}`,
+      cooldownMs: companionModePolicy.value.minimumActionIntervalMs,
+    }, companionModePolicy.value)
+
+    if (result.status === 'started') play(result.started)
+
+    return result.status
+  }
+
+  function cancelTasks() {
+    for (const controller of taskControllers.values()) {
+      controller.abort()
+    }
+
+    taskControllers.clear()
   }
 
   function startBehaviorScheduling() {
@@ -89,16 +137,19 @@ export function useBehaviorScheduler() {
       updateTimer = void 0
     }
 
+    cancelTasks()
     scheduler.clear()
   }
 
   function resetBehaviorScheduling() {
+    cancelTasks()
     scheduler.clear()
   }
 
   return {
     resetBehaviorScheduling,
     scheduleProactiveMotion,
+    scheduleProactiveTask,
     scheduleUserMotion,
     startBehaviorScheduling,
     stopBehaviorScheduling,

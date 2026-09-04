@@ -197,7 +197,7 @@ function handleMouseMove(event: MouseEvent) {
 
 <template>
   <div
-    class="relative size-screen overflow-hidden children:(absolute size-full)"
+    class="relative size-full overflow-hidden children:(absolute size-full)"
     :class="{ '-scale-x-100': catStore.model.mirror }"
     :style="{
       opacity: catStore.window.opacity / 100,

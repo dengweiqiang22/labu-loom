@@ -1,6 +1,6 @@
 import type { CompanionMode } from '@/domain/behavior/mode'
 
-export const MEMORY_SCHEMA_VERSION = 2
+export const MEMORY_SCHEMA_VERSION = 3
 export const MAX_DAILY_SUMMARIES = 30
 export const MAX_WEEKLY_SUMMARIES = 53
 
@@ -8,6 +8,7 @@ export interface MemorySettings {
   interactionsEnabled: boolean
   keyboardStatsEnabled: boolean
   mouseStatsEnabled: boolean
+  habitMemoryEnabled: boolean
 }
 
 export interface DailyActivitySummary {
@@ -47,8 +48,28 @@ export interface MonthlyActivityTrend {
 
 export type MemoryCategory = 'habit' | 'preference' | 'context' | 'relationship'
 export type MemorySource = 'explicit-choice' | 'activity-aggregate'
-export type MemoryKind = 'preferred-companion-mode' | 'preferred-interaction-frequency' | 'often-active-period'
-export type MemoryValue = CompanionMode | 'less' | 'same' | 'more' | 'morning' | 'afternoon' | 'evening'
+export type MemoryKind
+  = 'preferred-companion-mode'
+    | 'preferred-interaction-frequency'
+    | 'often-active-period'
+    | 'recent-energy-state'
+    | 'usual-activity-balance'
+    | 'interaction-response-style'
+export type MemoryValue
+  = CompanionMode
+    | 'less'
+    | 'same'
+    | 'more'
+    | 'morning'
+    | 'afternoon'
+    | 'evening'
+    | 'doing-well'
+    | 'taking-it-easy'
+    | 'keyboard-led'
+    | 'mouse-led'
+    | 'mixed-activity'
+    | 'responsive'
+    | 'reserved'
 
 export interface StructuredMemory {
   id: string
@@ -75,13 +96,38 @@ export const DEFAULT_MEMORY_SETTINGS: Readonly<MemorySettings> = Object.freeze({
   interactionsEnabled: true,
   keyboardStatsEnabled: false,
   mouseStatsEnabled: false,
+  habitMemoryEnabled: false,
 })
 
 const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 const MONTH_PATTERN = /^\d{4}-(?:0[1-9]|1[0-2])$/
 const MEMORY_CATEGORIES = new Set<MemoryCategory>(['habit', 'preference', 'context', 'relationship'])
-const MEMORY_KINDS = new Set<MemoryKind>(['preferred-companion-mode', 'preferred-interaction-frequency', 'often-active-period'])
-const MEMORY_VALUES = new Set<MemoryValue>(['quiet', 'companion', 'active', 'less', 'same', 'more', 'morning', 'afternoon', 'evening'])
+const MEMORY_KINDS = new Set<MemoryKind>([
+  'preferred-companion-mode',
+  'preferred-interaction-frequency',
+  'often-active-period',
+  'recent-energy-state',
+  'usual-activity-balance',
+  'interaction-response-style',
+])
+const MEMORY_VALUES = new Set<MemoryValue>([
+  'quiet',
+  'companion',
+  'active',
+  'less',
+  'same',
+  'more',
+  'morning',
+  'afternoon',
+  'evening',
+  'doing-well',
+  'taking-it-easy',
+  'keyboard-led',
+  'mouse-led',
+  'mixed-activity',
+  'responsive',
+  'reserved',
+])
 const MEMORY_SOURCES = new Set<MemorySource>(['explicit-choice', 'activity-aggregate'])
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -226,6 +272,7 @@ export function migrateMemoryState(value: unknown): MemoryState {
       interactionsEnabled: asBoolean(settings.interactionsEnabled, DEFAULT_MEMORY_SETTINGS.interactionsEnabled),
       keyboardStatsEnabled: asBoolean(settings.keyboardStatsEnabled, DEFAULT_MEMORY_SETTINGS.keyboardStatsEnabled),
       mouseStatsEnabled: asBoolean(settings.mouseStatsEnabled, DEFAULT_MEMORY_SETTINGS.mouseStatsEnabled),
+      habitMemoryEnabled: asBoolean(settings.habitMemoryEnabled, DEFAULT_MEMORY_SETTINGS.habitMemoryEnabled),
     },
     dailySummaries,
     weeklySummaries,

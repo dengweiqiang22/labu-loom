@@ -87,6 +87,8 @@ export function useInteraction() {
       memoryStore.recordProactiveInteraction(outcome)
     }
 
+    if (outcome === 'answered') memoryStore.recordInteractionChoice(choice.id)
+
     active.resolve(result)
   }
 

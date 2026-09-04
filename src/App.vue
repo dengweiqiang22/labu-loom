@@ -53,6 +53,10 @@ watch(() => generalStore.appearance.language, (value) => {
   locale.value = value ?? LANGUAGE.EN_US
 })
 
+watch(() => memoryStore.settings.habitMemoryEnabled, () => {
+  memoryStore.refreshDerivedMemories()
+})
+
 useTauriListen(LISTEN_KEY.SHOW_WINDOW, ({ payload }) => {
   if (appWindow.label !== payload) return
 

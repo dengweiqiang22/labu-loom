@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
+import type { InteractionChoiceId } from '@/domain/interaction/templates'
 import type { DailyActivityDelta } from '@/domain/memory/activity'
 import type { DailyActivitySummary, MemorySettings, MonthlyActivityTrend, StructuredMemory, WeeklyActivitySummary } from '@/domain/memory/schema'
 
 import { compressMemoryAggregates } from '@/domain/memory/compression'
 import { getLocalDay } from '@/domain/memory/day'
+import { createChoiceMemory, deriveAggregateMemories, mergeStructuredMemories } from '@/domain/memory/generation'
 import { DEFAULT_MEMORY_SETTINGS, MAX_DAILY_SUMMARIES, MEMORY_SCHEMA_VERSION, migrateMemoryState } from '@/domain/memory/schema'
 
 export const useMemoryStore = defineStore('memory', () => {
@@ -33,6 +35,7 @@ export const useMemoryStore = defineStore('memory', () => {
     monthlyTrends.value = migrated.monthlyTrends
     memories.value = migrated.memories
     compressAggregates()
+    refreshDerivedMemories()
   }
 
   function clearAllData() {
@@ -90,6 +93,7 @@ export const useMemoryStore = defineStore('memory', () => {
     summary.mouseActiveSeconds += delta.mouseActiveSeconds
     summary.idleSeconds += delta.idleSeconds
     summary.activeSessionCount += delta.activeSessionCount
+    refreshDerivedMemories(delta.day)
   }
 
   function recordProactiveInteraction(kind: 'offered' | 'answered' | 'dismissed', day = getLocalDay()) {
@@ -98,6 +102,26 @@ export const useMemoryStore = defineStore('memory', () => {
     if (kind === 'offered') summary.interactionsOffered += 1
     if (kind === 'answered') summary.interactionsAnswered += 1
     if (kind === 'dismissed') summary.interactionsDismissed += 1
+
+    refreshDerivedMemories(day)
+  }
+
+  function recordInteractionChoice(choiceId: InteractionChoiceId, day = getLocalDay()) {
+    const memory = createChoiceMemory(choiceId, day)
+
+    if (!memory) return
+
+    memories.value = mergeStructuredMemories(memories.value, [memory])
+  }
+
+  function refreshDerivedMemories(day = getLocalDay()) {
+    const generated = deriveAggregateMemories(
+      dailySummaries.value,
+      day,
+      settings.habitMemoryEnabled,
+    )
+
+    memories.value = mergeStructuredMemories(memories.value, generated, true)
   }
 
   return {
@@ -113,6 +137,8 @@ export const useMemoryStore = defineStore('memory', () => {
     compressAggregates,
     getDailySummary,
     getOrCreateDailySummary,
+    recordInteractionChoice,
     recordProactiveInteraction,
+    refreshDerivedMemories,
   }
 })

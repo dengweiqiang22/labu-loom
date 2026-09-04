@@ -11,6 +11,7 @@ test('uses privacy-first defaults for a new memory store', () => {
       interactionsEnabled: true,
       keyboardStatsEnabled: false,
       mouseStatsEnabled: false,
+      habitMemoryEnabled: false,
     },
     dailySummaries: [],
     weeklySummaries: [],
@@ -39,6 +40,7 @@ test('normalizes counts and drops unknown or raw fields', () => {
     interactionsEnabled: false,
     keyboardStatsEnabled: true,
     mouseStatsEnabled: false,
+    habitMemoryEnabled: false,
   })
   assert.deepEqual(state.dailySummaries[0], {
     day: '2026-09-04',

@@ -69,7 +69,7 @@ test('keeps only the latest thirty valid daily summaries', () => {
 
 test('accepts only structured memories with day-level provenance', () => {
   const validMemory = {
-    id: 'habit-afternoon',
+    id: 'habit-often-active-period',
     category: 'habit',
     kind: 'often-active-period',
     value: 'afternoon',
@@ -84,4 +84,38 @@ test('accepts only structured memories with day-level provenance', () => {
   })
 
   assert.deepEqual(state.memories, [validMemory])
+})
+
+test('migrates all prior schema shapes and rejects arbitrary memory identifiers', () => {
+  const validMemory = {
+    id: 'context-recent-energy-state',
+    category: 'context',
+    kind: 'recent-energy-state',
+    value: 'doing-well',
+    source: 'explicit-choice',
+    sourceFromDay: '2026-09-01',
+    sourceToDay: '2026-09-01',
+    createdDay: '2026-09-01',
+    updatedDay: '2026-09-01',
+  }
+  for (const schemaVersion of [1, 2, 3]) {
+    const state = migrateMemoryState({ schemaVersion, settings: { interactionsEnabled: true } })
+
+    assert.equal(state.schemaVersion, MEMORY_SCHEMA_VERSION)
+  }
+
+  const migrated = migrateMemoryState({
+    schemaVersion: 3,
+    settings: { interactionsEnabled: true },
+    weeklySummaries: [{ weekStart: '2026-08-31', daysCovered: 2 }],
+    monthlyTrends: [{ month: '2026-07', daysCovered: 7 }],
+    memories: [validMemory, { ...validMemory, id: 'arbitrary user text' }],
+    forgottenMemoryIds: ['context-recent-energy-state', 'arbitrary user text'],
+  })
+
+  assert.equal(migrated.schemaVersion, MEMORY_SCHEMA_VERSION)
+  assert.equal(migrated.weeklySummaries.length, 1)
+  assert.equal(migrated.monthlyTrends.length, 1)
+  assert.deepEqual(migrated.memories, [validMemory])
+  assert.deepEqual(migrated.forgottenMemoryIds, ['context-recent-energy-state'])
 })

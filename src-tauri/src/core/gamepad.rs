@@ -35,14 +35,14 @@ pub fn start_gamepad_listing<R: Runtime>(app_handle: AppHandle<R>) -> Result<(),
         return Ok(());
     }
 
-    if let Some(thread) = listener_thread.take() {
-        if thread.join().is_err() {
-            let message = "Previous gamepad listener thread panicked".to_string();
+    if let Some(thread) = listener_thread.take()
+        && thread.join().is_err()
+    {
+        let message = "Previous gamepad listener thread panicked".to_string();
 
-            emit_listener_failure(&app_handle, ListenerSource::Gamepad, message.clone());
+        emit_listener_failure(&app_handle, ListenerSource::Gamepad, message.clone());
 
-            return Err(message);
-        }
+        return Err(message);
     }
 
     let mut gilrs = Gilrs::new().map_err(|err| err.to_string())?;

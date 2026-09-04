@@ -23,7 +23,7 @@ pub fn run() {
 
             let preference_window = app.get_webview_window(PREFERENCE_WINDOW_LABEL).unwrap();
 
-            setup::default(&app_handle, main_window.clone(), preference_window.clone());
+            setup::default(app_handle, main_window.clone(), preference_window.clone());
 
             Ok(())
         })
@@ -63,13 +63,12 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_locale::init())
-        .on_window_event(|window, event| match event {
-            WindowEvent::CloseRequested { api, .. } => {
+        .on_window_event(|window, event| {
+            if let WindowEvent::CloseRequested { api, .. } = event {
                 let _ = window.hide();
 
                 api.prevent_close();
             }
-            _ => {}
         })
         .build(tauri::generate_context!())
         .expect("error while running tauri application");

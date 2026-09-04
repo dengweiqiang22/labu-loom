@@ -18,6 +18,53 @@ const FORBIDDEN_CONTENT_PATTERNS = [
   /gamepad-changed/,
 ]
 
+const MEMORY_ROOT_KEYS = new Set([
+  'schemaVersion',
+  'settings',
+  'dailySummaries',
+  'weeklySummaries',
+  'monthlyTrends',
+  'memories',
+  'forgottenMemoryIds',
+])
+const MEMORY_SETTING_KEYS = new Set([
+  'interactionsEnabled',
+  'keyboardStatsEnabled',
+  'mouseStatsEnabled',
+  'habitMemoryEnabled',
+])
+const DAILY_KEYS = new Set([
+  'day',
+  'keyboardActiveSeconds',
+  'mouseActiveSeconds',
+  'idleSeconds',
+  'activeSessionCount',
+  'interactionsOffered',
+  'interactionsAnswered',
+  'interactionsDismissed',
+])
+const WEEKLY_KEYS = new Set(['weekStart', 'daysCovered', ...DAILY_KEYS].filter(key => key !== 'day'))
+const MONTHLY_KEYS = new Set(['month', 'daysCovered', ...DAILY_KEYS].filter(key => key !== 'day'))
+const MEMORY_KEYS = new Set([
+  'id',
+  'category',
+  'kind',
+  'value',
+  'source',
+  'sourceFromDay',
+  'sourceToDay',
+  'createdDay',
+  'updatedDay',
+])
+const MEMORY_IDS = new Set([
+  'preference-companion-mode',
+  'preference-interaction-frequency',
+  'habit-often-active-period',
+  'context-recent-energy-state',
+  'habit-usual-activity-balance',
+  'relationship-interaction-style',
+])
+
 interface Finding {
   file: string
   rule: string
@@ -47,6 +94,63 @@ function checkContent(file: string, content: string, findings: Finding[]) {
   }
 }
 
+function checkAllowedKeys(
+  file: string,
+  label: string,
+  value: unknown,
+  allowed: ReadonlySet<string>,
+  findings: Finding[],
+) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return
+
+  for (const key of Object.keys(value)) {
+    if (!allowed.has(key)) findings.push({ file, rule: `unexpected ${label} key: ${key}` })
+  }
+}
+
+function checkMemoryStore(file: string, value: unknown, findings: Finding[]) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    findings.push({ file, rule: 'invalid memory store root' })
+    return
+  }
+
+  const state = value as Record<string, unknown>
+
+  checkAllowedKeys(file, 'memory root', state, MEMORY_ROOT_KEYS, findings)
+  checkAllowedKeys(file, 'memory setting', state.settings, MEMORY_SETTING_KEYS, findings)
+
+  for (const summary of Array.isArray(state.dailySummaries) ? state.dailySummaries : []) {
+    checkAllowedKeys(file, 'daily summary', summary, DAILY_KEYS, findings)
+  }
+
+  for (const summary of Array.isArray(state.weeklySummaries) ? state.weeklySummaries : []) {
+    checkAllowedKeys(file, 'weekly summary', summary, WEEKLY_KEYS, findings)
+  }
+
+  for (const trend of Array.isArray(state.monthlyTrends) ? state.monthlyTrends : []) {
+    checkAllowedKeys(file, 'monthly trend', trend, MONTHLY_KEYS, findings)
+  }
+
+  for (const memory of Array.isArray(state.memories) ? state.memories : []) {
+    checkAllowedKeys(file, 'structured memory', memory, MEMORY_KEYS, findings)
+
+    if (
+      memory
+      && typeof memory === 'object'
+      && !Array.isArray(memory)
+      && !MEMORY_IDS.has((memory as Record<string, unknown>).id as string)
+    ) {
+      findings.push({ file, rule: 'unknown structured memory id' })
+    }
+  }
+
+  for (const id of Array.isArray(state.forgottenMemoryIds) ? state.forgottenMemoryIds : []) {
+    if (typeof id !== 'string' || !MEMORY_IDS.has(id)) {
+      findings.push({ file, rule: 'unknown forgotten memory id' })
+    }
+  }
+}
+
 const roamingRoot = env.APPDATA
 const localRoot = env.LOCALAPPDATA
 
@@ -68,8 +172,12 @@ if (existsSync(storeRoot)) {
     const content = readFileSync(file, 'utf8')
     const forbiddenKeys = new Set<string>()
 
-    collectForbiddenKeys(JSON.parse(content), forbiddenKeys)
+    const parsed = JSON.parse(content)
+
+    collectForbiddenKeys(parsed, forbiddenKeys)
     checkContent(file, content, findings)
+
+    if (entry.name.startsWith('memory.')) checkMemoryStore(entry.name, parsed, findings)
 
     for (const key of forbiddenKeys) {
       findings.push({ file: entry.name, rule: `persisted key: ${key}` })

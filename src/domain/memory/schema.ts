@@ -140,6 +140,15 @@ export const MEMORY_VALUES_BY_KIND: Readonly<Record<MemoryKind, readonly MemoryV
   'interaction-response-style': ['responsive', 'reserved'],
 }
 
+export const MEMORY_ID_BY_KIND: Readonly<Record<MemoryKind, string>> = {
+  'preferred-companion-mode': 'preference-companion-mode',
+  'preferred-interaction-frequency': 'preference-interaction-frequency',
+  'often-active-period': 'habit-often-active-period',
+  'recent-energy-state': 'context-recent-energy-state',
+  'usual-activity-balance': 'habit-usual-activity-balance',
+  'interaction-response-style': 'relationship-interaction-style',
+}
+
 export function isMemoryValueAllowed(kind: MemoryKind, value: unknown): value is MemoryValue {
   return typeof value === 'string' && MEMORY_VALUES_BY_KIND[kind].includes(value as MemoryValue)
 }
@@ -225,11 +234,13 @@ function normalizeMonthlyTrend(value: unknown): MonthlyActivityTrend | undefined
 
 function normalizeMemory(value: unknown): StructuredMemory | undefined {
   const input = asRecord(value)
+  const kind = input.kind as MemoryKind
 
   if (
     typeof input.id !== 'string'
     || !MEMORY_CATEGORIES.has(input.category as MemoryCategory)
-    || !MEMORY_KINDS.has(input.kind as MemoryKind)
+    || !MEMORY_KINDS.has(kind)
+    || input.id !== MEMORY_ID_BY_KIND[kind]
     || !MEMORY_VALUES.has(input.value as MemoryValue)
     || !MEMORY_SOURCES.has(input.source as MemorySource)
     || !isDay(input.sourceFromDay)
@@ -243,7 +254,7 @@ function normalizeMemory(value: unknown): StructuredMemory | undefined {
   return {
     id: input.id,
     category: input.category as MemoryCategory,
-    kind: input.kind as MemoryKind,
+    kind,
     value: input.value as MemoryValue,
     source: input.source as MemorySource,
     sourceFromDay: input.sourceFromDay,
@@ -267,7 +278,9 @@ export function migrateMemoryState(value: unknown): MemoryState {
     ? input.memories.map(normalizeMemory).filter(memory => memory !== void 0)
     : []
   const forgottenMemoryIds = Array.isArray(input.forgottenMemoryIds)
-    ? [...new Set(input.forgottenMemoryIds.filter(id => typeof id === 'string'))]
+    ? [...new Set(input.forgottenMemoryIds.filter(id => (
+        typeof id === 'string' && Object.values(MEMORY_ID_BY_KIND).includes(id)
+      )))]
     : []
   const weeklySummaries = Array.isArray(input.weeklySummaries)
     ? input.weeklySummaries

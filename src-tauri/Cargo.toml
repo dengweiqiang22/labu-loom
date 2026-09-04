@@ -1,6 +1,6 @@
 [package]
 name = "labu-loom"
-version = "0.3.6"
+version = "0.3.7"
 description = "A Tauri App"
 authors = [ "labu-loom contributors" ]
 edition = "2024"

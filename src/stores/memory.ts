@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 import type { InteractionChoiceId } from '@/domain/interaction/templates'
 import type { DailyActivityDelta } from '@/domain/memory/activity'
@@ -8,6 +8,7 @@ import type { DailyActivitySummary, MemoryCategory, MemorySettings, MemoryValue,
 import { compressMemoryAggregates } from '@/domain/memory/compression'
 import { getLocalDay } from '@/domain/memory/day'
 import { createChoiceMemory, deriveAggregateMemories, mergeStructuredMemories } from '@/domain/memory/generation'
+import { createRecollectionOverview } from '@/domain/memory/recollection'
 import { DEFAULT_MEMORY_SETTINGS, isMemoryValueAllowed, MAX_DAILY_SUMMARIES, MEMORY_SCHEMA_VERSION, migrateMemoryState } from '@/domain/memory/schema'
 
 export const useMemoryStore = defineStore('memory', () => {
@@ -18,6 +19,12 @@ export const useMemoryStore = defineStore('memory', () => {
   const monthlyTrends = ref<MonthlyActivityTrend[]>([])
   const memories = ref<StructuredMemory[]>([])
   const forgottenMemoryIds = ref<string[]>([])
+  const recollectionOverview = computed(() => createRecollectionOverview(
+    dailySummaries.value,
+    weeklySummaries.value,
+    monthlyTrends.value,
+    memories.value,
+  ))
 
   function init() {
     const migrated = migrateMemoryState({
@@ -170,6 +177,7 @@ export const useMemoryStore = defineStore('memory', () => {
     monthlyTrends,
     memories,
     forgottenMemoryIds,
+    recollectionOverview,
     init,
     clearAllData,
     addDailyActivity,

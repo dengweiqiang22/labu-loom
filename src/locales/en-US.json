@@ -65,8 +65,21 @@
         }
       },
       "memory": {
-        "title": "Memory",
+        "title": "Recollections & Memory",
         "intro": "Only organized local memories appear here. You can edit, forget, or clear them; raw input records are never shown or stored.",
+        "tabs": { "recollection": "Shared Recollections", "management": "Memory Management" },
+        "views": {
+          "recollection": { "title": "Shared Recollections", "intro": "Gentle moments organized from local companionship records, without judging your productivity." },
+          "management": { "title": "Memory Management", "intro": "Review, edit, forget, or clear organized local memories." }
+        },
+        "recollection": {
+          "empty": "No shared recollections yet. Come back after spending some time together.",
+          "footprintTitle": "Time Together",
+          "recordedDays": "We have kept {days} days of companionship records.",
+          "recordedRange": "These records cover {from} to {to}.",
+          "highlightsTitle": "Recently Remembered",
+          "highlightsEmpty": "No recent memories have been organized yet"
+        },
         "empty": "No memories in this category yet",
         "sourceRange": "Source range: {from} to {to}",
         "localData": "Local Aggregate Data",

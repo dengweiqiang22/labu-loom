@@ -65,8 +65,21 @@
         }
       },
       "memory": {
-        "title": "记忆管理",
+        "title": "回忆与记忆",
         "intro": "这里只展示整理后的本地记忆。你可以修改、忘记或清除它们，不会看到原始输入记录。",
+        "tabs": { "recollection": "共同回忆", "management": "记忆管理" },
+        "views": {
+          "recollection": { "title": "共同回忆", "intro": "把本地陪伴记录整理成温和的片段，不评价你的效率。" },
+          "management": { "title": "记忆管理", "intro": "查看、修改、忘记或清除整理后的本地记忆。" }
+        },
+        "recollection": {
+          "empty": "还没有共同回忆，陪伴一段时间后再来看看吧",
+          "footprintTitle": "陪伴足迹",
+          "recordedDays": "我们已经留下 {days} 天的陪伴记录。",
+          "recordedRange": "这些记录来自 {from} 至 {to}。",
+          "highlightsTitle": "最近记住的事",
+          "highlightsEmpty": "还没有整理出近期记忆"
+        },
         "empty": "还没有这类记忆",
         "sourceRange": "来源范围：{from} 至 {to}",
         "localData": "本地聚合数据",

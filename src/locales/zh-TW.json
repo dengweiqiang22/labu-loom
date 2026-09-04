@@ -65,8 +65,21 @@
         }
       },
       "memory": {
-        "title": "記憶管理",
+        "title": "回憶與記憶",
         "intro": "這裡只顯示整理後的本機記憶。你可以修改、忘記或清除它們，不會看到原始輸入記錄。",
+        "tabs": { "recollection": "共同回憶", "management": "記憶管理" },
+        "views": {
+          "recollection": { "title": "共同回憶", "intro": "把本機陪伴記錄整理成溫和片段，不評價你的效率。" },
+          "management": { "title": "記憶管理", "intro": "查看、修改、忘記或清除整理後的本機記憶。" }
+        },
+        "recollection": {
+          "empty": "還沒有共同回憶，陪伴一段時間後再來看看吧",
+          "footprintTitle": "陪伴足跡",
+          "recordedDays": "我們已經留下 {days} 天的陪伴記錄。",
+          "recordedRange": "這些記錄來自 {from} 至 {to}。",
+          "highlightsTitle": "最近記住的事",
+          "highlightsEmpty": "還沒有整理出近期記憶"
+        },
         "empty": "還沒有這類記憶",
         "sourceRange": "來源範圍：{from} 至 {to}",
         "localData": "本機彙總資料",

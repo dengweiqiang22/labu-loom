@@ -65,8 +65,21 @@
         }
       },
       "memory": {
-        "title": "Quản lý ký ức",
+        "title": "Hồi ức và ký ức",
         "intro": "Chỉ các ký ức cục bộ đã được sắp xếp xuất hiện ở đây. Bạn có thể sửa, quên hoặc xóa; dữ liệu nhập thô không được lưu.",
+        "tabs": { "recollection": "Hồi ức chung", "management": "Quản lý ký ức" },
+        "views": {
+          "recollection": { "title": "Hồi ức chung", "intro": "Những khoảnh khắc nhẹ nhàng từ dữ liệu đồng hành cục bộ, không đánh giá năng suất của bạn." },
+          "management": { "title": "Quản lý ký ức", "intro": "Xem, sửa, quên hoặc xóa các ký ức cục bộ đã được sắp xếp." }
+        },
+        "recollection": {
+          "empty": "Chưa có hồi ức chung. Hãy quay lại sau khi chúng ta ở bên nhau thêm một thời gian.",
+          "footprintTitle": "Thời gian bên nhau",
+          "recordedDays": "Chúng ta đã lưu {days} ngày đồng hành.",
+          "recordedRange": "Các bản ghi này kéo dài từ {from} đến {to}.",
+          "highlightsTitle": "Những điều mới ghi nhớ",
+          "highlightsEmpty": "Chưa có ký ức gần đây được sắp xếp"
+        },
         "empty": "Chưa có ký ức trong nhóm này",
         "sourceRange": "Khoảng nguồn: {from} đến {to}",
         "localData": "Dữ liệu tổng hợp cục bộ",

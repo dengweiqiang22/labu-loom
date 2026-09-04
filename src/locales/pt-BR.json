@@ -67,6 +67,19 @@
       "memory": {
         "title": "Memórias",
         "intro": "Apenas memórias locais organizadas aparecem aqui. Você pode editar, esquecer ou apagar sem armazenar registros brutos de entrada.",
+        "tabs": { "recollection": "Memórias em comum", "management": "Gerenciar memórias" },
+        "views": {
+          "recollection": { "title": "Memórias em comum", "intro": "Momentos tranquilos organizados a partir dos registros locais de companhia, sem avaliar sua produtividade." },
+          "management": { "title": "Gerenciar memórias", "intro": "Veja, edite, esqueça ou apague memórias locais organizadas." }
+        },
+        "recollection": {
+          "empty": "Ainda não há memórias em comum. Volte depois de passarmos algum tempo juntos.",
+          "footprintTitle": "Tempo juntos",
+          "recordedDays": "Já guardamos {days} dias de registros de companhia.",
+          "recordedRange": "Esses registros vão de {from} a {to}.",
+          "highlightsTitle": "Lembranças recentes",
+          "highlightsEmpty": "Ainda não há memórias recentes organizadas"
+        },
         "empty": "Ainda não há memórias nesta categoria",
         "sourceRange": "Período de origem: {from} a {to}",
         "localData": "Dados Agregados Locais",

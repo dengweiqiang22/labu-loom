@@ -15,6 +15,11 @@ import { join } from './path'
 
 Config.MouseFollow = false
 
+interface StartMotionOptions {
+  priority?: Priority
+  onFinished?: () => void
+}
+
 class Live2d {
   private app: Application | null = null
   public model: Live2DSprite | null = null
@@ -107,10 +112,11 @@ class Live2d {
     this.model.anchor.set(0.5)
   }
 
-  public startMotion(motion: MotionInfo) {
+  public startMotion(motion: MotionInfo, options: StartMotionOptions = {}) {
     return this.model?.startMotion({
       ...motion,
-      priority: Priority.Normal,
+      priority: options.priority ?? Priority.Normal,
+      onFinished: options.onFinished,
     })
   }
 

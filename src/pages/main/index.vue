@@ -14,6 +14,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useActivityState } from '@/composables/useActivityState'
 import { useAppMenu } from '@/composables/useAppMenu'
+import { useBehaviorScheduler } from '@/composables/useBehaviorScheduler'
 import { useDevice } from '@/composables/useDevice'
 import { useGamepad } from '@/composables/useGamepad'
 import { useModel } from '@/composables/useModel'
@@ -31,6 +32,12 @@ import { clearObject } from '@/utils/shared'
 
 const { startListening } = useDevice()
 const { startActivityTracking, stopActivityTracking } = useActivityState()
+const {
+  resetBehaviorScheduling,
+  scheduleUserMotion,
+  startBehaviorScheduling,
+  stopBehaviorScheduling,
+} = useBehaviorScheduler()
 const appWindow = getCurrentWebviewWindow()
 const { modelSize, handleLoad, handleDestroy, handleResize, handleKeyChange } = useModel()
 const catStore = useCatStore()
@@ -43,10 +50,12 @@ const { stickActive } = useGamepad()
 
 onMounted(() => {
   startActivityTracking()
+  startBehaviorScheduling()
   void startListening()
 })
 
 onUnmounted(() => {
+  stopBehaviorScheduling()
   stopActivityTracking()
   handleDestroy()
 })
@@ -66,6 +75,7 @@ useEventListener('resize', () => {
 watch(() => modelStore.currentModel, async (model) => {
   if (!model) return
 
+  resetBehaviorScheduling()
   await handleLoad()
 
   const path = join(model.path, 'resources', 'background.png')
@@ -136,7 +146,7 @@ watch(() => catStore.model.motionSound, live2d.setMotionSoundEnabled, { immediat
 watch(() => catStore.model.maxFPS, live2d.setMaxFPS, { immediate: true })
 
 useTauriListen<MotionInfo>(LISTEN_KEY.START_MOTION, ({ payload }) => {
-  live2d.startMotion(payload)
+  scheduleUserMotion(payload)
 })
 
 useTauriListen<number>(LISTEN_KEY.SET_EXPRESSION, ({ payload }) => {

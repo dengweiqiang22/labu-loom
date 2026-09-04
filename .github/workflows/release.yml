@@ -13,6 +13,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Read release notes
+        id: release_notes
+        shell: pwsh
+        run: |
+          $releaseNotesPath = Join-Path 'docs/版本日志' '${{ github.ref_name }}.md'
+          if (-not (Test-Path -LiteralPath $releaseNotesPath)) {
+            throw "Release notes not found: $releaseNotesPath"
+          }
+
+          $releaseBody = Get-Content -Raw -LiteralPath $releaseNotesPath
+          if ([string]::IsNullOrWhiteSpace($releaseBody)) {
+            throw "Release notes are empty: $releaseNotesPath"
+          }
+
+          $delimiter = "RELEASE_NOTES_$([guid]::NewGuid().ToString('N'))"
+          Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "body<<$delimiter" -Encoding utf8
+          Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value $releaseBody -Encoding utf8
+          Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value $delimiter -Encoding utf8
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -58,7 +77,8 @@ jobs:
         with:
           tagName: ${{ github.ref_name }}
           releaseName: labu-loom v__VERSION__
-          generateReleaseNotes: true
+          releaseBody: ${{ steps.release_notes.outputs.body }}
+          generateReleaseNotes: false
           releaseDraft: true
           prerelease: false
           uploadUpdaterJson: true

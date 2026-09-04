@@ -53,3 +53,11 @@ test('does not create habit memory before opt-in or before three aggregate days'
   assert.equal(deriveAggregateMemories(data, '2026-09-04', true).some(item => item.category === 'habit'), false)
   assert.equal(deriveAggregateMemories([...data, summary('2026-09-03', 160, 20)], '2026-09-04', false).some(item => item.category === 'habit'), false)
 })
+
+test('keeps user edits and forgotten identifiers across automatic refreshes', () => {
+  const generated = createChoiceMemory('doing-well', '2026-09-04')!
+  const edited = { ...generated, value: 'taking-it-easy' as const, source: 'user-edited' as const }
+
+  assert.deepEqual(mergeStructuredMemories([edited], [generated]), [edited])
+  assert.deepEqual(mergeStructuredMemories([], [generated], false, new Set([generated.id])), [])
+})

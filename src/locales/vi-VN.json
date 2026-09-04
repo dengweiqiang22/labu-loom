@@ -64,6 +64,48 @@
           "maxFPS": "Giới hạn tốc độ khung hình tối đa cho việc render mô hình. Giảm tốc độ khung hình có thể giảm mức sử dụng CPU/GPU."
         }
       },
+      "memory": {
+        "title": "Quản lý ký ức",
+        "intro": "Chỉ các ký ức cục bộ đã được sắp xếp xuất hiện ở đây. Bạn có thể sửa, quên hoặc xóa; dữ liệu nhập thô không được lưu.",
+        "empty": "Chưa có ký ức trong nhóm này",
+        "sourceRange": "Khoảng nguồn: {from} đến {to}",
+        "localData": "Dữ liệu tổng hợp cục bộ",
+        "localDataSummary": "{daily} bản ghi ngày, {weekly} bản ghi tuần và {monthly} xu hướng tháng",
+        "categories": { "habit": "Thói quen", "preference": "Sở thích", "context": "Bối cảnh", "relationship": "Mối quan hệ" },
+        "sources": { "explicit-choice": "Lựa chọn rõ ràng", "activity-aggregate": "Xu hướng tổng hợp", "user-edited": "Bạn đã sửa" },
+        "kinds": {
+          "preferred-companion-mode": "Chế độ đồng hành ưa thích",
+          "preferred-interaction-frequency": "Tần suất tương tác ưa thích",
+          "often-active-period": "Thời gian thường hoạt động",
+          "recent-energy-state": "Trạng thái gần đây",
+          "usual-activity-balance": "Kiểu hoạt động thường dùng",
+          "interaction-response-style": "Kiểu phản hồi tương tác"
+        },
+        "values": {
+          "quiet": "Yên tĩnh",
+          "companion": "Đồng hành",
+          "active": "Năng động",
+          "less": "Ít hơn",
+          "same": "Giữ nguyên",
+          "more": "Nhiều hơn",
+          "morning": "Buổi sáng",
+          "afternoon": "Buổi chiều",
+          "evening": "Buổi tối",
+          "doing-well": "Khá ổn",
+          "taking-it-easy": "Muốn thư giãn",
+          "keyboard-led": "Chủ yếu bàn phím",
+          "mouse-led": "Chủ yếu chuột",
+          "mixed-activity": "Hoạt động cân bằng",
+          "responsive": "Thường phản hồi",
+          "reserved": "Muốn ít phản hồi"
+        },
+        "buttons": { "forget": "Quên", "clearCategory": "Xóa nhóm", "clearAll": "Xóa toàn bộ dữ liệu cục bộ" },
+        "hints": {
+          "forget": "Quên ký ức này và ngăn dữ liệu cũ tạo lại ngay lập tức?",
+          "clearCategory": "Xóa tất cả ký ức trong nhóm này?",
+          "clearAll": "Xóa toàn bộ tổng hợp ngày, tuần, tháng và mọi ký ức? Không thể hoàn tác."
+        }
+      },
       "general": {
         "title": "Chung",
         "labels": {

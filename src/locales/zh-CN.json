@@ -64,6 +64,48 @@
           "maxFPS": "限制模型渲染的最大帧率，降低帧率可以减少 CPU/GPU 占用。"
         }
       },
+      "memory": {
+        "title": "记忆管理",
+        "intro": "这里只展示整理后的本地记忆。你可以修改、忘记或清除它们，不会看到原始输入记录。",
+        "empty": "还没有这类记忆",
+        "sourceRange": "来源范围：{from} 至 {to}",
+        "localData": "本地聚合数据",
+        "localDataSummary": "日汇总 {daily} 条，周汇总 {weekly} 条，月度趋势 {monthly} 条",
+        "categories": { "habit": "习惯", "preference": "偏好", "context": "情境", "relationship": "关系" },
+        "sources": { "explicit-choice": "来自明确选择", "activity-aggregate": "来自聚合趋势", "user-edited": "由你修改" },
+        "kinds": {
+          "preferred-companion-mode": "偏好的陪伴模式",
+          "preferred-interaction-frequency": "偏好的互动频率",
+          "often-active-period": "常见活跃时段",
+          "recent-energy-state": "近期状态",
+          "usual-activity-balance": "常见活动方式",
+          "interaction-response-style": "互动回应方式"
+        },
+        "values": {
+          "quiet": "安静",
+          "companion": "陪伴",
+          "active": "活跃",
+          "less": "少一些",
+          "same": "保持现在",
+          "more": "多一些",
+          "morning": "上午",
+          "afternoon": "下午",
+          "evening": "晚上",
+          "doing-well": "状态不错",
+          "taking-it-easy": "想放松一下",
+          "keyboard-led": "键盘活动较多",
+          "mouse-led": "鼠标活动较多",
+          "mixed-activity": "键鼠活动均衡",
+          "responsive": "愿意回应",
+          "reserved": "偏好少回应"
+        },
+        "buttons": { "forget": "忘记", "clearCategory": "清除本类", "clearAll": "删除全部本地数据" },
+        "hints": {
+          "forget": "忘记这条记忆，并阻止相同旧数据立即重新生成它吗？",
+          "clearCategory": "清除当前类别的全部记忆吗？",
+          "clearAll": "删除全部日、周、月聚合数据和所有记忆吗？此操作无法撤销。"
+        }
+      },
       "general": {
         "title": "通用设置",
         "labels": {

@@ -15,7 +15,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useActivityState } from '@/composables/useActivityState'
 import { useAppMenu } from '@/composables/useAppMenu'
 import { useBehaviorScheduler } from '@/composables/useBehaviorScheduler'
-import { useDailyActivityAggregation } from '@/composables/useDailyActivityAggregation'
+import { resetPendingActivity, useDailyActivityAggregation } from '@/composables/useDailyActivityAggregation'
 import { useDevice } from '@/composables/useDevice'
 import { useFiniteMovement } from '@/composables/useFiniteMovement'
 import { useGamepad } from '@/composables/useGamepad'
@@ -184,6 +184,11 @@ useTauriListen<MotionInfo>(LISTEN_KEY.START_MOTION, ({ payload }) => {
 
 useTauriListen<number>(LISTEN_KEY.SET_EXPRESSION, ({ payload }) => {
   live2d.setExpression(payload)
+})
+
+useTauriListen(LISTEN_KEY.CLEAR_MEMORY_DATA, () => {
+  resetPendingActivity()
+  memoryStore.clearAllData()
 })
 
 function handleMouseDown() {

@@ -17,6 +17,7 @@ test('uses privacy-first defaults for a new memory store', () => {
     weeklySummaries: [],
     monthlyTrends: [],
     memories: [],
+    forgottenMemoryIds: [],
   })
 })
 

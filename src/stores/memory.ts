@@ -3,12 +3,12 @@ import { reactive, ref } from 'vue'
 
 import type { InteractionChoiceId } from '@/domain/interaction/templates'
 import type { DailyActivityDelta } from '@/domain/memory/activity'
-import type { DailyActivitySummary, MemorySettings, MonthlyActivityTrend, StructuredMemory, WeeklyActivitySummary } from '@/domain/memory/schema'
+import type { DailyActivitySummary, MemoryCategory, MemorySettings, MemoryValue, MonthlyActivityTrend, StructuredMemory, WeeklyActivitySummary } from '@/domain/memory/schema'
 
 import { compressMemoryAggregates } from '@/domain/memory/compression'
 import { getLocalDay } from '@/domain/memory/day'
 import { createChoiceMemory, deriveAggregateMemories, mergeStructuredMemories } from '@/domain/memory/generation'
-import { DEFAULT_MEMORY_SETTINGS, MAX_DAILY_SUMMARIES, MEMORY_SCHEMA_VERSION, migrateMemoryState } from '@/domain/memory/schema'
+import { DEFAULT_MEMORY_SETTINGS, isMemoryValueAllowed, MAX_DAILY_SUMMARIES, MEMORY_SCHEMA_VERSION, migrateMemoryState } from '@/domain/memory/schema'
 
 export const useMemoryStore = defineStore('memory', () => {
   const schemaVersion = ref(MEMORY_SCHEMA_VERSION)
@@ -17,6 +17,7 @@ export const useMemoryStore = defineStore('memory', () => {
   const weeklySummaries = ref<WeeklyActivitySummary[]>([])
   const monthlyTrends = ref<MonthlyActivityTrend[]>([])
   const memories = ref<StructuredMemory[]>([])
+  const forgottenMemoryIds = ref<string[]>([])
 
   function init() {
     const migrated = migrateMemoryState({
@@ -26,6 +27,7 @@ export const useMemoryStore = defineStore('memory', () => {
       weeklySummaries: weeklySummaries.value,
       monthlyTrends: monthlyTrends.value,
       memories: memories.value,
+      forgottenMemoryIds: forgottenMemoryIds.value,
     })
 
     schemaVersion.value = migrated.schemaVersion
@@ -34,6 +36,7 @@ export const useMemoryStore = defineStore('memory', () => {
     weeklySummaries.value = migrated.weeklySummaries
     monthlyTrends.value = migrated.monthlyTrends
     memories.value = migrated.memories
+    forgottenMemoryIds.value = migrated.forgottenMemoryIds
     compressAggregates()
     refreshDerivedMemories()
   }
@@ -43,6 +46,7 @@ export const useMemoryStore = defineStore('memory', () => {
     weeklySummaries.value = []
     monthlyTrends.value = []
     memories.value = []
+    forgottenMemoryIds.value = []
   }
 
   function getDailySummary(day = getLocalDay()) {
@@ -111,6 +115,7 @@ export const useMemoryStore = defineStore('memory', () => {
 
     if (!memory) return
 
+    forgottenMemoryIds.value = forgottenMemoryIds.value.filter(id => id !== memory.id)
     memories.value = mergeStructuredMemories(memories.value, [memory])
   }
 
@@ -121,7 +126,40 @@ export const useMemoryStore = defineStore('memory', () => {
       settings.habitMemoryEnabled,
     )
 
-    memories.value = mergeStructuredMemories(memories.value, generated, true)
+    memories.value = mergeStructuredMemories(
+      memories.value,
+      generated,
+      true,
+      new Set(forgottenMemoryIds.value),
+    )
+  }
+
+  function updateMemoryValue(id: string, value: MemoryValue, day = getLocalDay()) {
+    const memory = memories.value.find(item => item.id === id)
+
+    if (!memory || !isMemoryValueAllowed(memory.kind, value)) return false
+
+    memory.value = value
+    memory.source = 'user-edited'
+    memory.updatedDay = day
+
+    return true
+  }
+
+  function forgetMemory(id: string) {
+    if (!memories.value.some(memory => memory.id === id)) return
+
+    memories.value = memories.value.filter(memory => memory.id !== id)
+    forgottenMemoryIds.value = [...new Set([...forgottenMemoryIds.value, id])]
+  }
+
+  function clearMemoryCategory(category: MemoryCategory) {
+    const removedIds = memories.value
+      .filter(memory => memory.category === category)
+      .map(memory => memory.id)
+
+    memories.value = memories.value.filter(memory => memory.category !== category)
+    forgottenMemoryIds.value = [...new Set([...forgottenMemoryIds.value, ...removedIds])]
   }
 
   return {
@@ -131,14 +169,18 @@ export const useMemoryStore = defineStore('memory', () => {
     weeklySummaries,
     monthlyTrends,
     memories,
+    forgottenMemoryIds,
     init,
     clearAllData,
     addDailyActivity,
     compressAggregates,
     getDailySummary,
     getOrCreateDailySummary,
+    clearMemoryCategory,
+    forgetMemory,
     recordInteractionChoice,
     recordProactiveInteraction,
     refreshDerivedMemories,
+    updateMemoryValue,
   }
 })

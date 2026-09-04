@@ -64,6 +64,48 @@
           "maxFPS": "Limit the maximum frame rate for model rendering. Lowering the frame rate can reduce CPU/GPU usage."
         }
       },
+      "memory": {
+        "title": "Memory",
+        "intro": "Only organized local memories appear here. You can edit, forget, or clear them; raw input records are never shown or stored.",
+        "empty": "No memories in this category yet",
+        "sourceRange": "Source range: {from} to {to}",
+        "localData": "Local Aggregate Data",
+        "localDataSummary": "{daily} daily, {weekly} weekly, and {monthly} monthly records",
+        "categories": { "habit": "Habits", "preference": "Preferences", "context": "Context", "relationship": "Relationship" },
+        "sources": { "explicit-choice": "Explicit choice", "activity-aggregate": "Aggregate trend", "user-edited": "Edited by you" },
+        "kinds": {
+          "preferred-companion-mode": "Preferred companion mode",
+          "preferred-interaction-frequency": "Preferred interaction frequency",
+          "often-active-period": "Usual active period",
+          "recent-energy-state": "Recent state",
+          "usual-activity-balance": "Usual activity style",
+          "interaction-response-style": "Interaction response style"
+        },
+        "values": {
+          "quiet": "Quiet",
+          "companion": "Companion",
+          "active": "Active",
+          "less": "Less often",
+          "same": "Keep current",
+          "more": "More often",
+          "morning": "Morning",
+          "afternoon": "Afternoon",
+          "evening": "Evening",
+          "doing-well": "Doing well",
+          "taking-it-easy": "Taking it easy",
+          "keyboard-led": "Mostly keyboard",
+          "mouse-led": "Mostly mouse",
+          "mixed-activity": "Balanced activity",
+          "responsive": "Often responds",
+          "reserved": "Prefers fewer responses"
+        },
+        "buttons": { "forget": "Forget", "clearCategory": "Clear category", "clearAll": "Delete all local data" },
+        "hints": {
+          "forget": "Forget this memory and prevent the same old data from immediately recreating it?",
+          "clearCategory": "Clear every memory in this category?",
+          "clearAll": "Delete every daily, weekly, and monthly aggregate and all memories? This cannot be undone."
+        }
+      },
       "general": {
         "title": "General",
         "labels": {

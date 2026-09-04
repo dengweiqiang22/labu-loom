@@ -64,6 +64,48 @@
           "maxFPS": "Limitar a taxa máxima de quadros para renderização do modelo. Reduzir a taxa de quadros pode diminuir o uso de CPU/GPU."
         }
       },
+      "memory": {
+        "title": "Memórias",
+        "intro": "Apenas memórias locais organizadas aparecem aqui. Você pode editar, esquecer ou apagar sem armazenar registros brutos de entrada.",
+        "empty": "Ainda não há memórias nesta categoria",
+        "sourceRange": "Período de origem: {from} a {to}",
+        "localData": "Dados Agregados Locais",
+        "localDataSummary": "{daily} registros diários, {weekly} semanais e {monthly} mensais",
+        "categories": { "habit": "Hábitos", "preference": "Preferências", "context": "Contexto", "relationship": "Relacionamento" },
+        "sources": { "explicit-choice": "Escolha explícita", "activity-aggregate": "Tendência agregada", "user-edited": "Editado por você" },
+        "kinds": {
+          "preferred-companion-mode": "Modo de companhia preferido",
+          "preferred-interaction-frequency": "Frequência de interação preferida",
+          "often-active-period": "Período ativo habitual",
+          "recent-energy-state": "Estado recente",
+          "usual-activity-balance": "Estilo de atividade habitual",
+          "interaction-response-style": "Estilo de resposta"
+        },
+        "values": {
+          "quiet": "Silencioso",
+          "companion": "Companhia",
+          "active": "Ativo",
+          "less": "Menos",
+          "same": "Manter",
+          "more": "Mais",
+          "morning": "Manhã",
+          "afternoon": "Tarde",
+          "evening": "Noite",
+          "doing-well": "Estou bem",
+          "taking-it-easy": "Quero relaxar",
+          "keyboard-led": "Mais teclado",
+          "mouse-led": "Mais mouse",
+          "mixed-activity": "Atividade equilibrada",
+          "responsive": "Responde com frequência",
+          "reserved": "Prefere responder menos"
+        },
+        "buttons": { "forget": "Esquecer", "clearCategory": "Limpar categoria", "clearAll": "Excluir todos os dados locais" },
+        "hints": {
+          "forget": "Esquecer esta memória e impedir que os mesmos dados antigos a recriem imediatamente?",
+          "clearCategory": "Limpar todas as memórias desta categoria?",
+          "clearAll": "Excluir todos os agregados diários, semanais e mensais e todas as memórias? Não é possível desfazer."
+        }
+      },
       "general": {
         "title": "Geral",
         "labels": {

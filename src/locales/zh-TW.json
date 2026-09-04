@@ -64,6 +64,48 @@
           "maxFPS": "限制模型渲染的最大幀率，降低幀率可以減少 CPU/GPU 佔用。"
         }
       },
+      "memory": {
+        "title": "記憶管理",
+        "intro": "這裡只顯示整理後的本機記憶。你可以修改、忘記或清除它們，不會看到原始輸入記錄。",
+        "empty": "還沒有這類記憶",
+        "sourceRange": "來源範圍：{from} 至 {to}",
+        "localData": "本機彙總資料",
+        "localDataSummary": "日彙總 {daily} 筆，週彙總 {weekly} 筆，月度趨勢 {monthly} 筆",
+        "categories": { "habit": "習慣", "preference": "偏好", "context": "情境", "relationship": "關係" },
+        "sources": { "explicit-choice": "來自明確選擇", "activity-aggregate": "來自彙總趨勢", "user-edited": "由你修改" },
+        "kinds": {
+          "preferred-companion-mode": "偏好的陪伴模式",
+          "preferred-interaction-frequency": "偏好的互動頻率",
+          "often-active-period": "常見活躍時段",
+          "recent-energy-state": "近期狀態",
+          "usual-activity-balance": "常見活動方式",
+          "interaction-response-style": "互動回應方式"
+        },
+        "values": {
+          "quiet": "安靜",
+          "companion": "陪伴",
+          "active": "活躍",
+          "less": "少一些",
+          "same": "保持現在",
+          "more": "多一些",
+          "morning": "上午",
+          "afternoon": "下午",
+          "evening": "晚上",
+          "doing-well": "狀態不錯",
+          "taking-it-easy": "想放鬆一下",
+          "keyboard-led": "鍵盤活動較多",
+          "mouse-led": "滑鼠活動較多",
+          "mixed-activity": "鍵鼠活動均衡",
+          "responsive": "願意回應",
+          "reserved": "偏好少回應"
+        },
+        "buttons": { "forget": "忘記", "clearCategory": "清除本類", "clearAll": "刪除全部本機資料" },
+        "hints": {
+          "forget": "忘記這條記憶，並阻止相同舊資料立即重新產生它嗎？",
+          "clearCategory": "清除目前類別的全部記憶嗎？",
+          "clearAll": "刪除全部日、週、月彙總資料和所有記憶嗎？此操作無法復原。"
+        }
+      },
       "general": {
         "title": "一般設定",
         "labels": {

@@ -8,6 +8,7 @@ export const LISTEN_KEY = {
   INPUT_LISTENER_FAILED: 'input-listener-failed',
   START_MOTION: 'start-motion',
   SET_EXPRESSION: 'set-expression',
+  CLEAR_MEMORY_DATA: 'clear-memory-data',
 }
 
 export const INVOKE_KEY = {

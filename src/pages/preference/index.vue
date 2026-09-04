@@ -13,6 +13,7 @@ import { isMac } from '@/utils/platform'
 import About from './components/about/index.vue'
 import Cat from './components/cat/index.vue'
 import General from './components/general/index.vue'
+import Memory from './components/memory/index.vue'
 import Model from './components/model/index.vue'
 import Shortcut from './components/shortcut/index.vue'
 
@@ -46,6 +47,12 @@ const menus = computed(() => [
     label: t('pages.preference.model.title'),
     icon: 'i-solar:magic-stick-3-bold',
     component: Model,
+  },
+  {
+    key: 'memory',
+    label: t('pages.preference.memory.title'),
+    icon: 'i-solar:book-bookmark-bold',
+    component: Memory,
   },
   {
     key: 'shortcut',

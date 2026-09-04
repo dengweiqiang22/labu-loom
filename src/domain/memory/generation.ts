@@ -117,11 +117,18 @@ export function mergeStructuredMemories(
   existing: readonly StructuredMemory[],
   generated: readonly StructuredMemory[],
   replaceAggregate = false,
+  forgottenMemoryIds: ReadonlySet<string> = new Set(),
 ) {
-  const generatedIds = new Set(generated.map(memory => memory.id))
+  const editableGenerated = generated.filter(memory => !forgottenMemoryIds.has(memory.id))
+  const userEditedIds = new Set(
+    existing.filter(memory => memory.source === 'user-edited').map(memory => memory.id),
+  )
+  const generatedIds = new Set(
+    editableGenerated.filter(memory => !userEditedIds.has(memory.id)).map(memory => memory.id),
+  )
   const retained = existing.filter((memory) => {
     if (generatedIds.has(memory.id)) return false
-    if (replaceAggregate && memory.source === 'activity-aggregate') return false
+    if (replaceAggregate && memory.source === 'activity-aggregate' && !userEditedIds.has(memory.id)) return false
 
     return true
   })
@@ -129,7 +136,7 @@ export function mergeStructuredMemories(
 
   return [
     ...retained,
-    ...generated.map((memory) => {
+    ...editableGenerated.filter(memory => !userEditedIds.has(memory.id)).map((memory) => {
       const previous = previousById.get(memory.id)
 
       return previous ? { ...memory, createdDay: previous.createdDay } : memory

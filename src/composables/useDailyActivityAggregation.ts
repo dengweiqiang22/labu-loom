@@ -27,6 +27,10 @@ export function recordInputActivity(source: ActivitySource) {
   accumulator.record(source, performance.now())
 }
 
+export function resetPendingActivity() {
+  accumulator.reset(getLocalDay(), performance.now())
+}
+
 export function useDailyActivityAggregation() {
   const generalStore = useGeneralStore()
   const memoryStore = useMemoryStore()
@@ -61,7 +65,7 @@ export function useDailyActivityAggregation() {
   function startDailyActivityAggregation() {
     if (sampleTimer || flushTimer) return
 
-    accumulator.reset(getLocalDay(), performance.now())
+    resetPendingActivity()
     sampleTimer = setInterval(sample, SAMPLE_INTERVAL_MS)
     flushTimer = setInterval(flush, FLUSH_INTERVAL_MS)
   }
@@ -73,7 +77,7 @@ export function useDailyActivityAggregation() {
     sampleTimer = void 0
     flushTimer = void 0
     flush()
-    accumulator.reset(getLocalDay(), performance.now())
+    resetPendingActivity()
   }
 
   return {

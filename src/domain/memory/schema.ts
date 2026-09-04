@@ -1,6 +1,6 @@
 import type { CompanionMode } from '@/domain/behavior/mode'
 
-export const MEMORY_SCHEMA_VERSION = 3
+export const MEMORY_SCHEMA_VERSION = 4
 export const MAX_DAILY_SUMMARIES = 30
 export const MAX_WEEKLY_SUMMARIES = 53
 
@@ -47,7 +47,7 @@ export interface MonthlyActivityTrend {
 }
 
 export type MemoryCategory = 'habit' | 'preference' | 'context' | 'relationship'
-export type MemorySource = 'explicit-choice' | 'activity-aggregate'
+export type MemorySource = 'explicit-choice' | 'activity-aggregate' | 'user-edited'
 export type MemoryKind
   = 'preferred-companion-mode'
     | 'preferred-interaction-frequency'
@@ -90,6 +90,7 @@ export interface MemoryState {
   weeklySummaries: WeeklyActivitySummary[]
   monthlyTrends: MonthlyActivityTrend[]
   memories: StructuredMemory[]
+  forgottenMemoryIds: string[]
 }
 
 export const DEFAULT_MEMORY_SETTINGS: Readonly<MemorySettings> = Object.freeze({
@@ -128,7 +129,20 @@ const MEMORY_VALUES = new Set<MemoryValue>([
   'responsive',
   'reserved',
 ])
-const MEMORY_SOURCES = new Set<MemorySource>(['explicit-choice', 'activity-aggregate'])
+const MEMORY_SOURCES = new Set<MemorySource>(['explicit-choice', 'activity-aggregate', 'user-edited'])
+
+export const MEMORY_VALUES_BY_KIND: Readonly<Record<MemoryKind, readonly MemoryValue[]>> = {
+  'preferred-companion-mode': ['quiet', 'companion', 'active'],
+  'preferred-interaction-frequency': ['less', 'same', 'more'],
+  'often-active-period': ['morning', 'afternoon', 'evening'],
+  'recent-energy-state': ['doing-well', 'taking-it-easy'],
+  'usual-activity-balance': ['keyboard-led', 'mouse-led', 'mixed-activity'],
+  'interaction-response-style': ['responsive', 'reserved'],
+}
+
+export function isMemoryValueAllowed(kind: MemoryKind, value: unknown): value is MemoryValue {
+  return typeof value === 'string' && MEMORY_VALUES_BY_KIND[kind].includes(value as MemoryValue)
+}
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -252,6 +266,9 @@ export function migrateMemoryState(value: unknown): MemoryState {
   const memories = Array.isArray(input.memories)
     ? input.memories.map(normalizeMemory).filter(memory => memory !== void 0)
     : []
+  const forgottenMemoryIds = Array.isArray(input.forgottenMemoryIds)
+    ? [...new Set(input.forgottenMemoryIds.filter(id => typeof id === 'string'))]
+    : []
   const weeklySummaries = Array.isArray(input.weeklySummaries)
     ? input.weeklySummaries
         .map(normalizeWeeklySummary)
@@ -278,5 +295,6 @@ export function migrateMemoryState(value: unknown): MemoryState {
     weeklySummaries,
     monthlyTrends,
     memories,
+    forgottenMemoryIds,
   }
 }

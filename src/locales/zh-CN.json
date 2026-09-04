@@ -176,6 +176,17 @@
         "clickRecordShortcut": "点击录制快捷键"
       }
     },
+    "interactionBubble": {
+      "ariaLabel": "与宠物互动",
+      "open": "打开选择式互动",
+      "close": "关闭互动",
+      "prompts": { "dailyCheckIn": "现在感觉怎么样？" },
+      "choices": {
+        "doingWell": "状态不错",
+        "takingItEasy": "想放松一下",
+        "notNow": "暂时不回应"
+      }
+    },
     "updateApp": {
       "title": "发现新版本🥳",
       "labels": {

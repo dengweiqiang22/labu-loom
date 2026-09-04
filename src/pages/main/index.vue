@@ -18,12 +18,14 @@ import { useBehaviorScheduler } from '@/composables/useBehaviorScheduler'
 import { useDevice } from '@/composables/useDevice'
 import { useFiniteMovement } from '@/composables/useFiniteMovement'
 import { useGamepad } from '@/composables/useGamepad'
+import { useInteraction } from '@/composables/useInteraction'
 import { useModel } from '@/composables/useModel'
 import { useTauriListen } from '@/composables/useTauriListen'
 import { LISTEN_KEY } from '@/constants'
 import { hideWindow, setAlwaysOnTop, setTaskbarVisibility, showWindow } from '@/plugins/window'
 import { useCatStore } from '@/stores/cat'
 import { useGeneralStore } from '@/stores/general.ts'
+import { useMemoryStore } from '@/stores/memory'
 import { useModelStore } from '@/stores/model'
 import { isImage } from '@/utils/is'
 import live2d from '@/utils/live2d'
@@ -47,9 +49,11 @@ const catStore = useCatStore()
 const { getBaseMenu, getExitMenu } = useAppMenu()
 const modelStore = useModelStore()
 const generalStore = useGeneralStore()
+const memoryStore = useMemoryStore()
 const resizing = ref(false)
 const backgroundImagePath = ref<string>()
 const { stickActive } = useGamepad()
+const { activeInteraction, openInteraction } = useInteraction()
 
 onMounted(() => {
   startActivityTracking()
@@ -167,6 +171,11 @@ function handleMouseDown() {
   appWindow.startDragging()
 }
 
+function openUserInteraction() {
+  resetBehaviorScheduling()
+  void openInteraction('daily-check-in')
+}
+
 async function handleContextmenu(event: MouseEvent) {
   event.preventDefault()
 
@@ -240,5 +249,24 @@ function handleMouseMove(event: MouseEvent) {
         {{ resizing ? $t('pages.main.hints.redrawing') : $t('pages.main.hints.switching') }}
       </span>
     </div>
+
+    <button
+      v-if="memoryStore.settings.interactionsEnabled && !catStore.window.passThrough && !activeInteraction"
+      :aria-label="$t('components.interactionBubble.open')"
+      class="right-2 top-2 z-20 border-white/60 bg-black/35 text-white backdrop-blur-sm border text-sm rounded-full shadow-sm !absolute !size-7"
+      :title="$t('components.interactionBubble.open')"
+      type="button"
+      @click.stop="openUserInteraction"
+      @contextmenu.stop.prevent
+      @mousedown.stop
+      @mousemove.stop
+    >
+      ···
+    </button>
+
+    <InteractionBubble
+      v-if="memoryStore.settings.interactionsEnabled && !catStore.window.passThrough"
+      class="!absolute !size-auto"
+    />
   </div>
 </template>

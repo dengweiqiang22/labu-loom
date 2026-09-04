@@ -176,6 +176,17 @@
         "clickRecordShortcut": "Clique para gravar atalho"
       }
     },
+    "interactionBubble": {
+      "ariaLabel": "Interagir com seu pet",
+      "open": "Abrir interação por escolha",
+      "close": "Fechar interação",
+      "prompts": { "dailyCheckIn": "Como você está se sentindo agora?" },
+      "choices": {
+        "doingWell": "Estou bem",
+        "takingItEasy": "Quero relaxar",
+        "notNow": "Agora não"
+      }
+    },
     "updateApp": {
       "title": "Nova versão encontrada 🥳",
       "labels": {

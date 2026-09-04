@@ -176,6 +176,17 @@
         "clickRecordShortcut": "點擊錄製快速鍵"
       }
     },
+    "interactionBubble": {
+      "ariaLabel": "與寵物互動",
+      "open": "開啟選擇式互動",
+      "close": "關閉互動",
+      "prompts": { "dailyCheckIn": "現在感覺怎麼樣？" },
+      "choices": {
+        "doingWell": "狀態不錯",
+        "takingItEasy": "想放鬆一下",
+        "notNow": "暫時不回應"
+      }
+    },
     "updateApp": {
       "title": "發現新版本🥳",
       "labels": {

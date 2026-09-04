@@ -176,6 +176,17 @@
         "clickRecordShortcut": "Click để ghi phím tắt"
       }
     },
+    "interactionBubble": {
+      "ariaLabel": "Tương tác với thú cưng",
+      "open": "Mở tương tác theo lựa chọn",
+      "close": "Đóng tương tác",
+      "prompts": { "dailyCheckIn": "Bây giờ bạn cảm thấy thế nào?" },
+      "choices": {
+        "doingWell": "Khá ổn",
+        "takingItEasy": "Muốn thư giãn",
+        "notNow": "Chưa muốn trả lời"
+      }
+    },
     "updateApp": {
       "title": "Đã tìm thấy phiên bản mới 🥳",
       "labels": {

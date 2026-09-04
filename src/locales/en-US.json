@@ -176,6 +176,17 @@
         "clickRecordShortcut": "Click to record shortcut"
       }
     },
+    "interactionBubble": {
+      "ariaLabel": "Interact with your pet",
+      "open": "Open a choice-based interaction",
+      "close": "Close interaction",
+      "prompts": { "dailyCheckIn": "How are you feeling right now?" },
+      "choices": {
+        "doingWell": "Doing well",
+        "takingItEasy": "Taking it easy",
+        "notNow": "Not right now"
+      }
+    },
     "updateApp": {
       "title": "New Version Found 🥳",
       "labels": {

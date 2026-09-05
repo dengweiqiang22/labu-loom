@@ -49,7 +49,36 @@ test('bounds intensity while consuming high-frequency pointer activity', () => {
 
   assert.equal(snapshot.phase, 'active')
   assert.ok(snapshot.inputIntensity <= 1)
-  assert.deepEqual(Object.keys(snapshot).sort(), ['inactiveForMs', 'inputIntensity', 'phase'])
+  assert.deepEqual(Object.keys(snapshot).sort(), ['continuousActiveForMs', 'inactiveForMs', 'inputIntensity', 'phase'])
+  assert.equal(snapshot.continuousActiveForMs, 0)
+})
+
+test('tracks continuous active duration only in memory until idle', () => {
+  let now = 0
+  const tracker = new ActivityTracker(() => now)
+
+  tracker.record({
+    source: 'keyboard',
+    kind: 'button',
+    control: 'KeyA',
+    phase: 'pressed',
+    value: 1,
+  })
+
+  now = 10_000
+  tracker.record({
+    source: 'keyboard',
+    kind: 'button',
+    control: 'KeyB',
+    phase: 'pressed',
+    value: 1,
+  })
+
+  assert.equal(tracker.snapshot().continuousActiveForMs, 10_000)
+
+  now = 50_000
+  assert.equal(tracker.snapshot().phase, 'idle')
+  assert.equal(tracker.snapshot().continuousActiveForMs, undefined)
 })
 
 test('transitions from active through settling to idle', () => {
@@ -66,6 +95,7 @@ test('transitions from active through settling to idle', () => {
 
   now = 2_500
   assert.equal(tracker.snapshot().phase, 'settling')
+  assert.ok((tracker.snapshot().continuousActiveForMs ?? 0) >= 2_500)
 
   now = 31_000
   assert.deepEqual(tracker.snapshot(), {

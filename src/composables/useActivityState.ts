@@ -15,6 +15,7 @@ function updateState(snapshot: ActivitySnapshot) {
   state.phase = snapshot.phase
   state.inputIntensity = snapshot.inputIntensity
   state.inactiveForMs = snapshot.inactiveForMs
+  state.continuousActiveForMs = snapshot.continuousActiveForMs
 }
 
 function recordActivity(event: InputEvent) {

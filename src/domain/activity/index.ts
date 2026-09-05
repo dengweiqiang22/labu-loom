@@ -6,6 +6,7 @@ export interface ActivitySnapshot {
   phase: ActivityPhase
   inputIntensity: number
   inactiveForMs?: number
+  continuousActiveForMs?: number
 }
 
 type Clock = () => number
@@ -29,6 +30,7 @@ function getInputImpulse(event: InputEvent) {
 export class ActivityTracker {
   private inputIntensity = 0
   private lastActivityAt?: number
+  private streakStartedAt?: number
   private lastUpdatedAt: number
 
   constructor(private readonly now: Clock = () => performance.now()) {
@@ -56,6 +58,7 @@ export class ActivityTracker {
   reset() {
     this.inputIntensity = 0
     this.lastActivityAt = void 0
+    this.streakStartedAt = void 0
     this.lastUpdatedAt = this.now()
 
     return this.createSnapshot(this.lastUpdatedAt)
@@ -71,6 +74,8 @@ export class ActivityTracker {
 
   private createSnapshot(now: number): ActivitySnapshot {
     if (this.lastActivityAt === void 0) {
+      this.streakStartedAt = void 0
+
       return {
         phase: 'idle',
         inputIntensity: 0,
@@ -84,10 +89,23 @@ export class ActivityTracker {
         ? 'settling'
         : 'idle'
 
+    if (phase === 'idle') {
+      this.streakStartedAt = void 0
+
+      return {
+        phase,
+        inputIntensity: Math.min(1, this.inputIntensity),
+        inactiveForMs,
+      }
+    }
+
+    this.streakStartedAt ??= this.lastActivityAt
+
     return {
       phase,
       inputIntensity: Math.min(1, this.inputIntensity),
       inactiveForMs,
+      continuousActiveForMs: Math.max(0, now - this.streakStartedAt),
     }
   }
 }

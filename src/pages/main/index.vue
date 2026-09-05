@@ -24,6 +24,7 @@ import { useInteraction } from '@/composables/useInteraction'
 import { useModel } from '@/composables/useModel'
 import { useProactiveInteraction } from '@/composables/useProactiveInteraction'
 import { useTauriListen } from '@/composables/useTauriListen'
+import { useWorkHint } from '@/composables/useWorkHint'
 import { LISTEN_KEY } from '@/constants'
 import { hideWindow, setAlwaysOnTop, setTaskbarVisibility, showWindow } from '@/plugins/window'
 import { useCatStore } from '@/stores/cat'
@@ -42,6 +43,7 @@ const { startActivityTracking, stopActivityTracking } = useActivityState()
 const {
   resetBehaviorScheduling,
   scheduleProactiveInteraction,
+  scheduleProactiveMotion,
   scheduleProactiveTask,
   scheduleUserMotion,
   startBehaviorScheduling,
@@ -49,6 +51,7 @@ const {
 } = useBehaviorScheduler()
 const { startFiniteMovement, stopFiniteMovement } = useFiniteMovement(scheduleProactiveTask)
 const { startProactiveInteraction, stopProactiveInteraction } = useProactiveInteraction(scheduleProactiveInteraction)
+const { startWorkHint, stopWorkHint } = useWorkHint(scheduleProactiveMotion)
 const appWindow = getCurrentWebviewWindow()
 const { modelSize, handleLoad, handleDestroy, handleResize, handleKeyChange } = useModel()
 const catStore = useCatStore()
@@ -67,6 +70,7 @@ onMounted(() => {
   startBehaviorScheduling()
   startFiniteMovement()
   startProactiveInteraction()
+  startWorkHint()
   void startListening()
 })
 
@@ -74,6 +78,7 @@ onUnmounted(() => {
   stopBehaviorScheduling()
   stopFiniteMovement()
   stopProactiveInteraction()
+  stopWorkHint()
   stopActivityTracking()
   stopDailyActivityAggregation()
   handleDestroy()

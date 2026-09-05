@@ -65,6 +65,13 @@ const companionModeHint = computed(() => {
     >
       <Switch v-model:checked="memoryStore.settings.habitMemoryEnabled" />
     </ProListItem>
+
+    <ProListItem
+      :description="$t('pages.preference.cat.hints.restRemindersEnabled')"
+      :title="$t('pages.preference.cat.labels.restRemindersEnabled')"
+    >
+      <Switch v-model:checked="memoryStore.settings.restRemindersEnabled" />
+    </ProListItem>
   </ProList>
 
   <ProList :title="$t('pages.preference.cat.labels.modelSettings')">

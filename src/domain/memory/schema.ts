@@ -1,6 +1,6 @@
 import type { CompanionMode } from '@/domain/behavior/mode'
 
-export const MEMORY_SCHEMA_VERSION = 4
+export const MEMORY_SCHEMA_VERSION = 5
 export const MAX_DAILY_SUMMARIES = 30
 export const MAX_WEEKLY_SUMMARIES = 53
 
@@ -9,6 +9,7 @@ export interface MemorySettings {
   keyboardStatsEnabled: boolean
   mouseStatsEnabled: boolean
   habitMemoryEnabled: boolean
+  restRemindersEnabled: boolean
 }
 
 export interface DailyActivitySummary {
@@ -98,6 +99,7 @@ export const DEFAULT_MEMORY_SETTINGS: Readonly<MemorySettings> = Object.freeze({
   keyboardStatsEnabled: false,
   mouseStatsEnabled: false,
   habitMemoryEnabled: false,
+  restRemindersEnabled: false,
 })
 
 const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/
@@ -303,6 +305,7 @@ export function migrateMemoryState(value: unknown): MemoryState {
       keyboardStatsEnabled: asBoolean(settings.keyboardStatsEnabled, DEFAULT_MEMORY_SETTINGS.keyboardStatsEnabled),
       mouseStatsEnabled: asBoolean(settings.mouseStatsEnabled, DEFAULT_MEMORY_SETTINGS.mouseStatsEnabled),
       habitMemoryEnabled: asBoolean(settings.habitMemoryEnabled, DEFAULT_MEMORY_SETTINGS.habitMemoryEnabled),
+      restRemindersEnabled: asBoolean(settings.restRemindersEnabled, DEFAULT_MEMORY_SETTINGS.restRemindersEnabled),
     },
     dailySummaries,
     weeklySummaries,

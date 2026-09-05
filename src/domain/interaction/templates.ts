@@ -1,4 +1,4 @@
-export type InteractionTemplateId = 'daily-check-in'
+export type InteractionTemplateId = 'daily-check-in' | 'rest-reminder'
 export type InteractionChoiceId = 'doing-well' | 'taking-it-easy' | 'not-now'
 
 export interface InteractionChoice {
@@ -26,6 +26,27 @@ const INTERACTION_TEMPLATES: Readonly<Record<InteractionTemplateId, InteractionT
       {
         id: 'taking-it-easy',
         labelKey: 'components.interactionBubble.choices.takingItEasy',
+        dismisses: false,
+      },
+      {
+        id: 'not-now',
+        labelKey: 'components.interactionBubble.choices.notNow',
+        dismisses: true,
+      },
+    ],
+  },
+  'rest-reminder': {
+    id: 'rest-reminder',
+    promptKey: 'components.interactionBubble.prompts.restReminder',
+    choices: [
+      {
+        id: 'taking-it-easy',
+        labelKey: 'components.interactionBubble.choices.takingItEasy',
+        dismisses: false,
+      },
+      {
+        id: 'doing-well',
+        labelKey: 'components.interactionBubble.choices.doingWell',
         dismisses: false,
       },
       {

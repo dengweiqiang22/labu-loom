@@ -23,6 +23,7 @@ import { useGamepad } from '@/composables/useGamepad'
 import { useInteraction } from '@/composables/useInteraction'
 import { useModel } from '@/composables/useModel'
 import { useProactiveInteraction } from '@/composables/useProactiveInteraction'
+import { useRestReminder } from '@/composables/useRestReminder'
 import { useTauriListen } from '@/composables/useTauriListen'
 import { useWorkHint } from '@/composables/useWorkHint'
 import { LISTEN_KEY } from '@/constants'
@@ -51,6 +52,7 @@ const {
 } = useBehaviorScheduler()
 const { startFiniteMovement, stopFiniteMovement } = useFiniteMovement(scheduleProactiveTask)
 const { startProactiveInteraction, stopProactiveInteraction } = useProactiveInteraction(scheduleProactiveInteraction)
+const { startRestReminder, stopRestReminder } = useRestReminder(scheduleProactiveInteraction)
 const { startWorkHint, stopWorkHint } = useWorkHint(scheduleProactiveMotion)
 const appWindow = getCurrentWebviewWindow()
 const { modelSize, handleLoad, handleDestroy, handleResize, handleKeyChange } = useModel()
@@ -70,6 +72,7 @@ onMounted(() => {
   startBehaviorScheduling()
   startFiniteMovement()
   startProactiveInteraction()
+  startRestReminder()
   startWorkHint()
   void startListening()
 })
@@ -78,6 +81,7 @@ onUnmounted(() => {
   stopBehaviorScheduling()
   stopFiniteMovement()
   stopProactiveInteraction()
+  stopRestReminder()
   stopWorkHint()
   stopActivityTracking()
   stopDailyActivityAggregation()

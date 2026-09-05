@@ -32,6 +32,7 @@ const MEMORY_SETTING_KEYS = new Set([
   'keyboardStatsEnabled',
   'mouseStatsEnabled',
   'habitMemoryEnabled',
+  'restRemindersEnabled',
 ])
 const DAILY_KEYS = new Set([
   'day',

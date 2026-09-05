@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { canOfferProactiveInteraction, getInteractionCooldownMultiplier } from '../src/domain/interaction/scheduling'
+import { canOfferProactiveInteraction, canOfferRestReminder, getInteractionCooldownMultiplier } from '../src/domain/interaction/scheduling'
 
 const context = {
   interactionsEnabled: true,
@@ -28,4 +28,24 @@ test('backs off after repeated dismissals without treating one dismissal as a pr
   assert.equal(getInteractionCooldownMultiplier(1, 1), 1)
   assert.equal(getInteractionCooldownMultiplier(4, 2), 2)
   assert.equal(getInteractionCooldownMultiplier(4, 3), 3)
+})
+
+test('offers rest reminders only when enabled and once per continuous streak', () => {
+  const restContext = {
+    restRemindersEnabled: true,
+    interactionsEnabled: true,
+    passThrough: false,
+    visible: true,
+    continuousActiveForMs: 25 * 60_000,
+    thresholdMs: 25 * 60_000,
+    maximumInteractionsPerDay: 2,
+    interactionsOfferedToday: 0,
+    alreadyOfferedThisStreak: false,
+  }
+
+  assert.equal(canOfferRestReminder(restContext), true)
+  assert.equal(canOfferRestReminder({ ...restContext, restRemindersEnabled: false }), false)
+  assert.equal(canOfferRestReminder({ ...restContext, continuousActiveForMs: 1_000 }), false)
+  assert.equal(canOfferRestReminder({ ...restContext, alreadyOfferedThisStreak: true }), false)
+  assert.equal(canOfferRestReminder({ ...restContext, maximumInteractionsPerDay: 0 }), false)
 })

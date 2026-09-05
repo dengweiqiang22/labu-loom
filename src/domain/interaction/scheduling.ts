@@ -10,6 +10,18 @@ export interface ProactiveInteractionContext {
   maximumInteractionsPerDay: number
 }
 
+export interface RestReminderContext {
+  restRemindersEnabled: boolean
+  interactionsEnabled: boolean
+  passThrough: boolean
+  visible: boolean
+  continuousActiveForMs?: number
+  thresholdMs: number
+  maximumInteractionsPerDay: number
+  interactionsOfferedToday: number
+  alreadyOfferedThisStreak: boolean
+}
+
 export function canOfferProactiveInteraction(context: ProactiveInteractionContext) {
   return context.interactionsEnabled
     && !context.passThrough
@@ -17,6 +29,17 @@ export function canOfferProactiveInteraction(context: ProactiveInteractionContex
     && context.activityPhase === 'idle'
     && context.maximumInteractionsPerDay > 0
     && context.interactionsOfferedToday < context.maximumInteractionsPerDay
+}
+
+export function canOfferRestReminder(context: RestReminderContext) {
+  return context.restRemindersEnabled
+    && context.interactionsEnabled
+    && !context.passThrough
+    && context.visible
+    && context.maximumInteractionsPerDay > 0
+    && context.interactionsOfferedToday < context.maximumInteractionsPerDay
+    && !context.alreadyOfferedThisStreak
+    && (context.continuousActiveForMs ?? 0) >= context.thresholdMs
 }
 
 export function getInteractionCooldownMultiplier(offered: number, dismissed: number) {

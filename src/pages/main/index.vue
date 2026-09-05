@@ -12,6 +12,7 @@ import { round } from 'es-toolkit'
 import { nth } from 'es-toolkit/compat'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
+import InteractionBubble from '@/components/interaction-bubble/index.vue'
 import { useActivityState } from '@/composables/useActivityState'
 import { useAppMenu } from '@/composables/useAppMenu'
 import { useBehaviorScheduler } from '@/composables/useBehaviorScheduler'

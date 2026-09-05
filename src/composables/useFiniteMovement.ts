@@ -9,6 +9,7 @@ import { useCompanionMode } from '@/composables/useCompanionMode'
 import { setAutomaticWindowMovement } from '@/composables/useWindowState'
 import { WINDOW_LABEL } from '@/constants'
 import { planNearbyMovement } from '@/domain/behavior/movement'
+import { findMonitorForPoint, getVisibleBounds } from '@/domain/window/bounds'
 import { useAppStore } from '@/stores/app'
 import { useCatStore } from '@/stores/cat'
 
@@ -20,13 +21,6 @@ const MOVEMENT_FRAME_MS = 50
 
 function delay(duration: number) {
   return new Promise(resolve => setTimeout(resolve, duration))
-}
-
-function contains(point: Point, position: Point, size: { width: number, height: number }) {
-  return point.x >= position.x
-    && point.x < position.x + size.width
-    && point.y >= position.y
-    && point.y < position.y + size.height
 }
 
 export function useFiniteMovement(scheduleTask: ScheduleTask) {
@@ -83,17 +77,15 @@ export function useFiniteMovement(scheduleTask: ScheduleTask) {
       y: preferred?.y ?? current.y,
     }
     const monitors = await availableMonitors()
-    const monitor = monitors.find(item => contains(anchor, item.position, item.size))
-      ?? monitors.find(item => contains(current, item.position, item.size))
+    const monitor = findMonitorForPoint(monitors, anchor)
+      ?? findMonitorForPoint(monitors, current)
+      ?? monitors[0]
 
     if (!monitor) return
 
     const target = planNearbyMovement({
       anchor,
-      bounds: {
-        ...monitor.position,
-        ...monitor.size,
-      },
+      bounds: getVisibleBounds(monitor),
       locked: catStore.window.lockPosition,
       mode: catStore.companion.mode,
       windowSize,

@@ -5,12 +5,18 @@ import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { availableMonitors } from '@tauri-apps/api/window'
 import { useDebounceFn } from '@vueuse/core'
 import { isNumber } from 'es-toolkit/compat'
-import { onMounted, ref, shallowRef, watch } from 'vue'
+import { onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 
 import { WINDOW_LABEL } from '@/constants'
+import {
+  clampWindowPosition,
+  findMonitorForPoint,
+  getVisibleBounds,
+  resolveRestoredWindowPosition,
+} from '@/domain/window/bounds'
 import { useAppStore } from '@/stores/app'
 import { useCatStore } from '@/stores/cat'
-import { getCursorMonitor } from '@/utils/monitor'
+import { getCursorMonitor, invalidateCursorMonitorCache } from '@/utils/monitor'
 
 export type WindowState = Record<string, Partial<PhysicalPosition & PhysicalSize> | undefined>
 
@@ -27,40 +33,58 @@ export function useWindowState() {
   const appStore = useAppStore()
   const catStore = useCatStore()
   const isRestored = ref(false)
+  const unlistenFocus = ref<(() => void) | undefined>()
 
   onMounted(() => {
     appWindow.onMoved(onMoved)
-
     appWindow.onResized(onResized)
+    appWindow.onScaleChanged(() => {
+      invalidateCursorMonitorCache()
+      void clampToMonitor()
+    })
 
-    appWindow.onScaleChanged(clampToMonitor)
+    void appWindow.onFocusChanged(({ payload: focused }) => {
+      if (focused) void clampToMonitor()
+    }).then((unlisten) => {
+      unlistenFocus.value = unlisten
+    })
   })
+
+  onUnmounted(() => {
+    unlistenFocus.value?.()
+  })
+
+  async function resolveClampMonitor() {
+    const windowPos = await appWindow.outerPosition()
+    const monitors = await availableMonitors()
+    const matched = findMonitorForPoint(monitors, windowPos)
+
+    if (matched) return matched
+
+    return getCursorMonitor() ?? monitors[0] ?? null
+  }
 
   const clampToMonitor = useDebounceFn(async () => {
     if (label !== WINDOW_LABEL.MAIN || !catStore.window.keepInScreen) return
 
-    const monitor = await getCursorMonitor()
+    const monitor = await resolveClampMonitor()
 
     if (!monitor) return
 
-    const { position: monitorPos, size: monitorSize } = monitor
     const windowSize = await appWindow.outerSize()
     const windowPos = await appWindow.outerPosition()
+    const clamped = clampWindowPosition(
+      windowPos,
+      windowSize,
+      getVisibleBounds(monitor),
+    )
 
-    const minX = monitorPos.x
-    const maxX = monitorPos.x + monitorSize.width - windowSize.width
-    const minY = monitorPos.y
-    const maxY = monitorPos.y + monitorSize.height - windowSize.height
+    if (clamped.x === windowPos.x && clamped.y === windowPos.y) return
 
-    const clampedX = Math.max(minX, Math.min(windowPos.x, maxX))
-    const clampedY = Math.max(minY, Math.min(windowPos.y, maxY))
-
-    if (clampedX === windowPos.x && clampedY === windowPos.y) return
-
-    return appWindow.setPosition(new PhysicalPosition(clampedX, clampedY))
+    return appWindow.setPosition(new PhysicalPosition(clamped.x, clamped.y))
   }, 500)
 
-  watch(() => catStore.window.keepInScreen, clampToMonitor)
+  watch(() => catStore.window.keepInScreen, () => void clampToMonitor())
 
   const shouldPersistChange = async () => {
     const minimized = await appWindow.isMinimized()
@@ -79,7 +103,7 @@ export function useWindowState() {
 
     Object.assign(appStore.windowState[label], event.payload)
 
-    clampToMonitor()
+    void clampToMonitor()
   }
 
   const onResized = async (event: Event<PhysicalSize>) => {
@@ -89,26 +113,25 @@ export function useWindowState() {
 
     Object.assign(appStore.windowState[label], event.payload)
 
-    clampToMonitor()
+    void clampToMonitor()
   }
 
   const restoreState = async () => {
     const { x, y, width, height } = appStore.windowState[label] ?? {}
+    const windowSize = width && height
+      ? { width, height }
+      : await appWindow.outerSize()
 
     if (isNumber(x) && isNumber(y)) {
       const monitors = await availableMonitors()
+      const restored = resolveRestoredWindowPosition(
+        { x, y },
+        windowSize,
+        monitors,
+      )
 
-      const monitor = monitors.find((monitor) => {
-        const { position, size } = monitor
-
-        const inBoundsX = x >= position.x && x <= position.x + size.width
-        const inBoundsY = y >= position.y && y <= position.y + size.height
-
-        return inBoundsX && inBoundsY
-      })
-
-      if (monitor) {
-        await appWindow.setPosition(new PhysicalPosition(x, y))
+      if (restored) {
+        await appWindow.setPosition(new PhysicalPosition(restored.x, restored.y))
       }
     }
 
@@ -120,7 +143,7 @@ export function useWindowState() {
 
     isRestored.value = true
 
-    clampToMonitor()
+    void clampToMonitor()
   }
 
   return {

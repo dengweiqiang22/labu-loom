@@ -52,3 +52,22 @@ export function getInteractionCooldownMultiplier(offered: number, dismissed: num
 
   return 1
 }
+
+export function shouldConsumeRestReminderSlot(scheduleStatus: string) {
+  return scheduleStatus === 'started' || scheduleStatus === 'queued'
+}
+
+export function nextRestReminderStreakGate(input: {
+  continuousActiveForMs: number
+  lastContinuousActiveForMs: number
+  offeredThisStreak: boolean
+}) {
+  const continuous = Math.max(0, input.continuousActiveForMs)
+  const isNewStreak = continuous === 0
+    || continuous < input.lastContinuousActiveForMs
+
+  return {
+    offeredThisStreak: isNewStreak ? false : input.offeredThisStreak,
+    lastContinuousActiveForMs: continuous,
+  }
+}

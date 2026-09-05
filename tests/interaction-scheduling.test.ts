@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { canOfferProactiveInteraction, canOfferRestReminder, getInteractionCooldownMultiplier } from '../src/domain/interaction/scheduling'
+import { canOfferProactiveInteraction, canOfferRestReminder, getInteractionCooldownMultiplier, nextRestReminderStreakGate, shouldConsumeRestReminderSlot } from '../src/domain/interaction/scheduling'
 
 const context = {
   interactionsEnabled: true,
@@ -48,4 +48,39 @@ test('offers rest reminders only when enabled and once per continuous streak', (
   assert.equal(canOfferRestReminder({ ...restContext, continuousActiveForMs: 1_000 }), false)
   assert.equal(canOfferRestReminder({ ...restContext, alreadyOfferedThisStreak: true }), false)
   assert.equal(canOfferRestReminder({ ...restContext, maximumInteractionsPerDay: 0 }), false)
+})
+
+test('only consumes the rest-reminder streak slot when scheduling starts or queues', () => {
+  assert.equal(shouldConsumeRestReminderSlot('started'), true)
+  assert.equal(shouldConsumeRestReminderSlot('queued'), true)
+  assert.equal(shouldConsumeRestReminderSlot('rejected'), false)
+})
+
+test('clears the rest-reminder streak gate when continuous activity resets or drops', () => {
+  assert.deepEqual(nextRestReminderStreakGate({
+    continuousActiveForMs: 0,
+    lastContinuousActiveForMs: 40_000,
+    offeredThisStreak: true,
+  }), {
+    offeredThisStreak: false,
+    lastContinuousActiveForMs: 0,
+  })
+
+  assert.deepEqual(nextRestReminderStreakGate({
+    continuousActiveForMs: 5_000,
+    lastContinuousActiveForMs: 40_000,
+    offeredThisStreak: true,
+  }), {
+    offeredThisStreak: false,
+    lastContinuousActiveForMs: 5_000,
+  })
+
+  assert.deepEqual(nextRestReminderStreakGate({
+    continuousActiveForMs: 45_000,
+    lastContinuousActiveForMs: 40_000,
+    offeredThisStreak: true,
+  }), {
+    offeredThisStreak: true,
+    lastContinuousActiveForMs: 45_000,
+  })
 })

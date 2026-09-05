@@ -2,7 +2,12 @@ import { useActivityState } from '@/composables/useActivityState'
 import { useCompanionMode } from '@/composables/useCompanionMode'
 import { useInteraction } from '@/composables/useInteraction'
 import { DEFAULT_WORK_HINT_THRESHOLD_MS } from '@/domain/behavior/work-hint'
-import { canOfferRestReminder, getInteractionCooldownMultiplier } from '@/domain/interaction/scheduling'
+import {
+  canOfferRestReminder,
+  getInteractionCooldownMultiplier,
+  nextRestReminderStreakGate,
+  shouldConsumeRestReminderSlot,
+} from '@/domain/interaction/scheduling'
 import { useCatStore } from '@/stores/cat'
 import { useMemoryStore } from '@/stores/memory'
 
@@ -25,13 +30,14 @@ export function useRestReminder(scheduleInteraction: ScheduleInteraction) {
   let lastContinuousActiveForMs = 0
 
   function syncStreakGate() {
-    const continuous = activityState.continuousActiveForMs ?? 0
+    const next = nextRestReminderStreakGate({
+      continuousActiveForMs: activityState.continuousActiveForMs ?? 0,
+      lastContinuousActiveForMs,
+      offeredThisStreak,
+    })
 
-    if (continuous === 0 && lastContinuousActiveForMs > 0) {
-      offeredThisStreak = false
-    }
-
-    lastContinuousActiveForMs = continuous
+    offeredThisStreak = next.offeredThisStreak
+    lastContinuousActiveForMs = next.lastContinuousActiveForMs
   }
 
   function requestRestReminder() {
@@ -57,14 +63,17 @@ export function useRestReminder(scheduleInteraction: ScheduleInteraction) {
       return
     }
 
-    offeredThisStreak = true
-    scheduleInteraction(
+    const status = scheduleInteraction(
       'rest-reminder',
       async (signal) => {
         await openInteraction('rest-reminder', 'proactive', signal)
       },
       getInteractionCooldownMultiplier(offered, dismissed),
     )
+
+    if (shouldConsumeRestReminderSlot(status)) {
+      offeredThisStreak = true
+    }
   }
 
   function startRestReminder() {

@@ -19,6 +19,19 @@ export default defineConfig(async () => ({
   //
   // 1. prevent vite from obscuring rust errors
   clearScreen: false,
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('antdv-next') || id.includes('@antdv-next')) return 'antd'
+            if (id.includes('vue-i18n') || id.includes('vue-router') || id.includes('\\vue\\') || id.includes('/vue/')) return 'vue-vendor'
+            if (id.includes('pixi.js') || id.includes('easy-live2d')) return 'live2d'
+          }
+        },
+      },
+    },
+  },
   // 2. tauri expects a fixed port, fail if that port is not available
   server: {
     port: 1420,

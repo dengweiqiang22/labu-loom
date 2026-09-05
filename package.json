@@ -1,7 +1,7 @@
 {
   "name": "labu-loom",
   "type": "module",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "private": true,
   "packageManager": "pnpm@11.19.0",
   "author": "labu-loom contributors",
@@ -40,6 +40,7 @@
     "test:memory-summary": "tsx --test tests/memory-summary.test.ts",
     "test:work-hint": "tsx --test tests/work-hint.test.ts",
     "test:window-bounds": "tsx --test tests/window-bounds.test.ts",
+    "test:error-message": "tsx --test tests/error-message.test.ts",
     "verify:privacy": "node --experimental-strip-types scripts/verifyPrivacy.ts",
     "preinstall": "npx only-allow pnpm",
     "prepare": "simple-git-hooks",

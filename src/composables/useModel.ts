@@ -8,8 +8,10 @@ import { isNil, round } from 'es-toolkit'
 import { findKey, nth } from 'es-toolkit/compat'
 import { ref } from 'vue'
 
+import { i18n } from '@/locales'
 import { useCatStore } from '@/stores/cat'
 import { useModelStore } from '@/stores/model'
+import { getUserFacingErrorMessage } from '@/utils/errorMessage'
 import { getCursorMonitor } from '@/utils/monitor'
 import { isMac } from '@/utils/platform'
 
@@ -107,7 +109,7 @@ export function useModel() {
         modelStore.shortcuts[id] = shortcut
       }
     } catch (error) {
-      message.error(String(error))
+      message.error(getUserFacingErrorMessage(error, i18n.global.t('common.errors.operationFailed')))
     }
   }
 

@@ -1,4 +1,9 @@
 {
+  "common": {
+    "errors": {
+      "operationFailed": "操作沒有完成，請稍後再試。"
+    }
+  },
   "pages": {
     "main": {
       "hints": {

@@ -1,4 +1,9 @@
 {
+  "common": {
+    "errors": {
+      "operationFailed": "Algo deu errado. Tente novamente mais tarde."
+    }
+  },
   "pages": {
     "main": {
       "hints": {

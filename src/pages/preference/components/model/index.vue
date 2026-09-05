@@ -11,6 +11,7 @@ import type { Model } from '@/stores/model'
 
 import { useCatStore } from '@/stores/cat'
 import { useModelStore } from '@/stores/model'
+import { getUserFacingErrorMessage } from '@/utils/errorMessage'
 import { join } from '@/utils/path'
 
 import BehaviorModal from './components/behavior-modal/index.vue'
@@ -51,7 +52,7 @@ async function handleDelete(item: Model) {
 
     message.success(t('pages.preference.model.hints.deleteSuccess'))
   } catch (error) {
-    message.error(String(error))
+    message.error(getUserFacingErrorMessage(error, t('common.errors.operationFailed')))
   } finally {
     modelStore.models = modelStore.models.filter(item => item.id !== id)
 

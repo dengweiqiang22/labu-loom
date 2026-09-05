@@ -13,6 +13,7 @@ import type { ModelMode } from '@/stores/model'
 
 import { INVOKE_KEY } from '@/constants'
 import { useModelStore } from '@/stores/model'
+import { getUserFacingErrorMessage } from '@/utils/errorMessage'
 import { join } from '@/utils/path'
 
 const dropRef = useTemplateRef('drop')
@@ -91,7 +92,7 @@ watch(selectPaths, async (paths) => {
 
       message.success(t('pages.preference.model.hints.importSuccess'))
     } catch (error) {
-      message.error(String(error))
+      message.error(getUserFacingErrorMessage(error, t('common.errors.operationFailed')))
     }
   }
 })

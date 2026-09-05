@@ -1,4 +1,9 @@
 {
+  "common": {
+    "errors": {
+      "operationFailed": "Có lỗi xảy ra. Vui lòng thử lại sau."
+    }
+  },
   "pages": {
     "main": {
       "hints": {

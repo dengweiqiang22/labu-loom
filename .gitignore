@@ -23,3 +23,8 @@ target
 *.njsproj
 *.sln
 *.sw?
+
+# Cursor / SpecStory local tooling
+.cursor/
+.cursorindexingignore
+.specstory/

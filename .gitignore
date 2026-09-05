@@ -28,3 +28,6 @@ target
 .cursor/
 .cursorindexingignore
 .specstory/
+
+# Local-only Cursor and Codex process communication
+work-logs/

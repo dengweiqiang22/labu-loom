@@ -4,8 +4,14 @@
 
 - 分支：`dev`
 - 版本：`0.4.3`
-- 相对基线：`434b83b`（忽略 work-logs 的提交）之后的未提交工作区改动
+- 功能提交：`6f5e058 feat(memory): 增加宠物视角自然总结`
+- 协作说明提交：`521f6ca`
 - Codex 启动消息：`20260905-142834-codex-handoff-01`
+
+## 所有权
+
+- Cursor 侧开发、自检、提交推送已完成，不再继续修改本任务产品代码。
+- 测试、Windows 实机验收与最终 `go` / `no-go` 由 Codex 负责。
 
 ## 完成内容
 
@@ -37,13 +43,7 @@
 
 ## 未执行验证
 
-- 未启动 `corepack pnpm tauri dev`：按用户约定，启动开发服务前需明确同意。
-- 因此共同回忆页面展示与清除联动的 Windows 实机验收留给 Codex。
-
-## 工作区说明
-
-- 未纳入本任务的既有修改：`AGENTS.md`、`docs/交接记录/README.md`（非本次 RE-03 改动）。
-- `work-logs/` 已被根 `.gitignore` 忽略。
+- Windows 共同回忆展示与清除联动未由 Cursor 执行；按分工交由 Codex 验收。
 
 ## 风险
 

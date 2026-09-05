@@ -28,6 +28,3 @@ target
 .cursor/
 .cursorindexingignore
 .specstory/
-
-# Local Cursor ↔ Codex work coordination (not for version control)
-work-logs/

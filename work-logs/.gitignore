@@ -1,0 +1,7 @@
+.runtime/
+*.tmp
+
+active/*/inbox/codex/*
+!active/*/inbox/codex/README.md
+active/*/inbox/cursor/*
+!active/*/inbox/cursor/README.md

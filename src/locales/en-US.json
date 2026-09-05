@@ -74,6 +74,15 @@
         },
         "recollection": {
           "empty": "No shared recollections yet. Come back after spending some time together.",
+          "summaryTitle": "How I see us",
+          "summary": {
+            "highlightsOnly": "I still remember {count} little things we recently shared.",
+            "quietDays": "Across these {days} days, we mostly stayed quietly together.",
+            "moreQuietTime": "These past {days} days, our quiet time seems to have grown.",
+            "answeredMoments": "In these {days} days, we shared {answered} small replies.",
+            "accompaniedDays": "For these {days} days, I stayed by your side.",
+            "recordedDays": "We have already left {days} days of companionship behind."
+          },
           "footprintTitle": "Time Together",
           "recordedDays": "We have kept {days} days of companionship records.",
           "recordedRange": "These records cover {from} to {to}.",

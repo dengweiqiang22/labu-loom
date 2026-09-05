@@ -10,6 +10,7 @@ import { getLocalDay } from '@/domain/memory/day'
 import { createChoiceMemory, deriveAggregateMemories, mergeStructuredMemories } from '@/domain/memory/generation'
 import { createRecollectionOverview } from '@/domain/memory/recollection'
 import { DEFAULT_MEMORY_SETTINGS, isMemoryValueAllowed, MAX_DAILY_SUMMARIES, MEMORY_SCHEMA_VERSION, migrateMemoryState } from '@/domain/memory/schema'
+import { createPetPerspectiveSummary } from '@/domain/memory/summary'
 
 export const useMemoryStore = defineStore('memory', () => {
   const schemaVersion = ref(MEMORY_SCHEMA_VERSION)
@@ -25,6 +26,7 @@ export const useMemoryStore = defineStore('memory', () => {
     monthlyTrends.value,
     memories.value,
   ))
+  const petPerspectiveSummary = computed(() => createPetPerspectiveSummary(recollectionOverview.value))
 
   function init() {
     const migrated = migrateMemoryState({
@@ -178,6 +180,7 @@ export const useMemoryStore = defineStore('memory', () => {
     memories,
     forgottenMemoryIds,
     recollectionOverview,
+    petPerspectiveSummary,
     init,
     clearAllData,
     addDailyActivity,

@@ -74,6 +74,15 @@
         },
         "recollection": {
           "empty": "Chưa có hồi ức chung. Hãy quay lại sau khi chúng ta ở bên nhau thêm một thời gian.",
+          "summaryTitle": "Cách mình nhìn về chúng ta",
+          "summary": {
+            "highlightsOnly": "Mình vẫn nhớ {count} điều nhỏ chúng ta vừa cùng giữ lại.",
+            "quietDays": "Trong {days} ngày này, chúng ta chủ yếu ở bên nhau thật yên.",
+            "moreQuietTime": "Những {days} ngày gần đây, khoảng yên lặng hình như nhiều hơn.",
+            "answeredMoments": "Trong {days} ngày này, chúng ta đã có {answered} lần đáp lại nhỏ.",
+            "accompaniedDays": "Suốt {days} ngày này, mình vẫn ở bên bạn.",
+            "recordedDays": "Chúng ta đã cùng để lại {days} ngày dấu vết đồng hành."
+          },
           "footprintTitle": "Thời gian bên nhau",
           "recordedDays": "Chúng ta đã lưu {days} ngày đồng hành.",
           "recordedRange": "Các bản ghi này kéo dài từ {from} đến {to}.",

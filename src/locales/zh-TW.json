@@ -74,6 +74,15 @@
         },
         "recollection": {
           "empty": "還沒有共同回憶，陪伴一段時間後再來看看吧",
+          "summaryTitle": "寵物眼裡的我們",
+          "summary": {
+            "highlightsOnly": "我還記得最近一起留下的 {count} 件小事。",
+            "quietDays": "這 {days} 天裡，我們大多安靜地待在一起。",
+            "moreQuietTime": "最近這 {days} 天，安靜的時間好像更多一些。",
+            "answeredMoments": "這 {days} 天裡，我們有過 {answered} 次小小的回應。",
+            "accompaniedDays": "這 {days} 天，我一直陪在你身邊。",
+            "recordedDays": "我們已經一起留下了 {days} 天的陪伴痕跡。"
+          },
           "footprintTitle": "陪伴足跡",
           "recordedDays": "我們已經留下 {days} 天的陪伴記錄。",
           "recordedRange": "這些記錄來自 {from} 至 {to}。",

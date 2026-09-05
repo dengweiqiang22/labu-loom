@@ -15,6 +15,7 @@ const { t } = useI18n()
 const currentView = ref<'recollection' | 'management'>('recollection')
 const categories: MemoryCategory[] = ['habit', 'preference', 'context', 'relationship']
 const overview = computed(() => memoryStore.recollectionOverview)
+const petSummary = computed(() => memoryStore.petPerspectiveSummary)
 const memoriesByCategory = computed(() => new Map(categories.map(category => [
   category,
   memoryStore.memories.filter(memory => memory.category === category),
@@ -82,6 +83,16 @@ async function clearAllData() {
       />
 
       <template v-else>
+        <Card
+          v-if="petSummary"
+          size="small"
+          :title="$t('pages.preference.memory.recollection.summaryTitle')"
+        >
+          <p class="m-0 text-4">
+            {{ $t(`pages.preference.memory.recollection.summary.${petSummary.template}`, petSummary.params) }}
+          </p>
+        </Card>
+
         <Card
           size="small"
           :title="$t('pages.preference.memory.recollection.footprintTitle')"

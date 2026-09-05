@@ -74,6 +74,15 @@
         },
         "recollection": {
           "empty": "还没有共同回忆，陪伴一段时间后再来看看吧",
+          "summaryTitle": "宠物眼里的我们",
+          "summary": {
+            "highlightsOnly": "我还记得最近一起留下的 {count} 件小事。",
+            "quietDays": "这 {days} 天里，我们大多安静地待在一起。",
+            "moreQuietTime": "最近这 {days} 天，安静的时间好像更多一些。",
+            "answeredMoments": "这 {days} 天里，我们有过 {answered} 次小小的回应。",
+            "accompaniedDays": "这 {days} 天，我一直陪在你身边。",
+            "recordedDays": "我们已经一起留下了 {days} 天的陪伴痕迹。"
+          },
           "footprintTitle": "陪伴足迹",
           "recordedDays": "我们已经留下 {days} 天的陪伴记录。",
           "recordedRange": "这些记录来自 {from} 至 {to}。",

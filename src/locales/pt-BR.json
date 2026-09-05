@@ -74,6 +74,15 @@
         },
         "recollection": {
           "empty": "Ainda não há memórias em comum. Volte depois de passarmos algum tempo juntos.",
+          "summaryTitle": "Como eu nos vejo",
+          "summary": {
+            "highlightsOnly": "Ainda me lembro de {count} pequenas coisas que compartilhamos recentemente.",
+            "quietDays": "Nesses {days} dias, ficamos juntos na maior parte do tempo em silêncio.",
+            "moreQuietTime": "Nestes últimos {days} dias, o tempo quieto parece ter aumentado.",
+            "answeredMoments": "Nesses {days} dias, tivemos {answered} pequenas respostas.",
+            "accompaniedDays": "Nestes {days} dias, fiquei ao seu lado.",
+            "recordedDays": "Já deixamos {days} dias de companhia registrados."
+          },
           "footprintTitle": "Tempo juntos",
           "recordedDays": "Já guardamos {days} dias de registros de companhia.",
           "recordedRange": "Esses registros vão de {from} a {to}.",

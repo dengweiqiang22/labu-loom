@@ -8,7 +8,9 @@
     "main": {
       "hints": {
         "redrawing": "重繪中…",
-        "switching": "切換中…"
+        "switching": "切換中…",
+        "loadFailed": "模型載入失敗",
+        "retry": "重試"
       }
     },
     "preference": {

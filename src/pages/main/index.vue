@@ -55,7 +55,7 @@ const { startProactiveInteraction, stopProactiveInteraction } = useProactiveInte
 const { startRestReminder, stopRestReminder } = useRestReminder(scheduleProactiveInteraction)
 const { startWorkHint, stopWorkHint } = useWorkHint(scheduleProactiveMotion)
 const appWindow = getCurrentWebviewWindow()
-const { modelSize, handleLoad, handleDestroy, handleResize, handleKeyChange } = useModel()
+const { modelSize, modelLoadError, handleLoad, handleDestroy, handleResize, handleKeyChange } = useModel()
 const catStore = useCatStore()
 const { getBaseMenu, getExitMenu } = useAppMenu()
 const modelStore = useModelStore()
@@ -100,21 +100,26 @@ useEventListener('resize', () => {
   debouncedResize()
 })
 
-watch(() => modelStore.currentModel, async (model) => {
+async function loadCurrentModel() {
+  const model = modelStore.currentModel
+
   if (!model) return
 
   resetBehaviorScheduling()
-  await handleLoad()
+  backgroundImagePath.value = undefined
+  clearObject([modelStore.supportKeys, modelStore.pressedKeys])
 
-  const path = join(model.path, 'resources', 'background.png')
+  const loadedPath = await handleLoad()
+
+  if (!loadedPath) return
+
+  const path = join(loadedPath, 'resources', 'background.png')
 
   const existed = await exists(path)
 
   backgroundImagePath.value = existed ? convertFileSrc(path) : void 0
 
-  clearObject([modelStore.supportKeys, modelStore.pressedKeys])
-
-  const resourcePath = join(model.path, 'resources')
+  const resourcePath = join(loadedPath, 'resources')
   const groups = ['left-keys', 'right-keys']
 
   for await (const groupName of groups) {
@@ -130,7 +135,13 @@ watch(() => modelStore.currentModel, async (model) => {
   }
 
   modelStore.modelReady = true
-}, { deep: true, immediate: true })
+}
+
+watch(
+  () => [modelStore.currentModel?.id, modelStore.currentModel?.path],
+  loadCurrentModel,
+  { immediate: true },
+)
 
 watch([() => catStore.window.scale, modelSize], async ([scale, modelSize]) => {
   if (!modelSize) return
@@ -278,11 +289,24 @@ function handleMouseMove(event: MouseEvent) {
 
     <div
       v-show="resizing || !modelStore.modelReady"
-      class="flex items-center justify-center bg-black"
+      class="flex flex-col items-center justify-center gap-3 px-6 bg-black"
     >
-      <span class="text-center text-[10vw] text-[#fff]">
-        {{ resizing ? $t('pages.main.hints.redrawing') : $t('pages.main.hints.switching') }}
+      <span class="text-center text-[8vw] text-[#fff]">
+        {{ resizing
+          ? $t('pages.main.hints.redrawing')
+          : modelLoadError
+            ? $t('pages.main.hints.loadFailed')
+            : $t('pages.main.hints.switching') }}
       </span>
+      <button
+        v-if="modelLoadError && !resizing"
+        class="bg-white/15 px-3 py-1 text-[5vw] text-white rounded"
+        type="button"
+        @click.stop="loadCurrentModel"
+        @mousedown.stop
+      >
+        {{ $t('pages.main.hints.retry') }}
+      </button>
     </div>
 
     <button

@@ -8,6 +8,7 @@ import { isNil, round } from 'es-toolkit'
 import { findKey, nth } from 'es-toolkit/compat'
 import { ref } from 'vue'
 
+import { resolveModelPath } from '@/domain/model/path'
 import { i18n } from '@/locales'
 import { useCatStore } from '@/stores/cat'
 import { useModelStore } from '@/stores/model'
@@ -30,6 +31,7 @@ export function useModel() {
   const modelStore = useModelStore()
   const catStore = useCatStore()
   const modelSize = ref<ModelSize>()
+  const modelLoadError = ref<string>()
 
   function getBehaviorShortcut(index: number) {
     const primary = isMac ? 'Command' : 'Control'
@@ -68,12 +70,14 @@ export function useModel() {
   }
 
   async function handleLoad() {
+    modelStore.modelReady = false
+    modelLoadError.value = undefined
+
     try {
       if (!modelStore.currentModel) return
 
-      const { path } = modelStore.currentModel
-
-      await resolveResource(path)
+      const modelsPath = await resolveResource('assets/models')
+      const path = resolveModelPath(modelStore.currentModel, modelsPath)
 
       const { width, height, motions, expressions } = await live2d.load(path)
 
@@ -108,8 +112,17 @@ export function useModel() {
 
         modelStore.shortcuts[id] = shortcut
       }
+
+      return path
     } catch (error) {
-      message.error(getUserFacingErrorMessage(error, i18n.global.t('common.errors.operationFailed')))
+      modelSize.value = undefined
+      modelStore.currentMotions = []
+      modelStore.currentExpressions = []
+
+      const errorMessage = getUserFacingErrorMessage(error, i18n.global.t('common.errors.operationFailed'))
+
+      modelLoadError.value = errorMessage
+      message.error(errorMessage)
     }
   }
 
@@ -235,6 +248,7 @@ export function useModel() {
 
   return {
     modelSize,
+    modelLoadError,
     handlePress,
     handleRelease,
     handleLoad,

@@ -8,7 +8,9 @@
     "main": {
       "hints": {
         "redrawing": "Redrawing...",
-        "switching": "Switching..."
+        "switching": "Switching...",
+        "loadFailed": "Model failed to load",
+        "retry": "Retry"
       }
     },
     "preference": {

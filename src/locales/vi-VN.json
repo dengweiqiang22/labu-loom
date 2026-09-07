@@ -8,7 +8,9 @@
     "main": {
       "hints": {
         "redrawing": "Đang đổi kích thước...",
-        "switching": "Đang chuyển đổi..."
+        "switching": "Đang chuyển đổi...",
+        "loadFailed": "Không thể tải mô hình",
+        "retry": "Thử lại"
       }
     },
     "preference": {

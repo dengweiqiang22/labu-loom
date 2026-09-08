@@ -12,7 +12,10 @@ import {
 const primary = {
   position: { x: 0, y: 0 },
   size: { width: 1920, height: 1080 },
-  workArea: { x: 0, y: 0, width: 1920, height: 1040 },
+  workArea: {
+    position: { x: 0, y: 0 },
+    size: { width: 1920, height: 1040 },
+  },
 }
 
 const secondary = {
@@ -21,11 +24,21 @@ const secondary = {
 }
 
 test('prefers the work area when clamping into a monitor', () => {
-  assert.deepEqual(getVisibleBounds(primary), primary.workArea)
+  assert.deepEqual(getVisibleBounds(primary), { x: 0, y: 0, width: 1920, height: 1040 })
   assert.deepEqual(
     clampWindowPosition({ x: 1800, y: 1000 }, { width: 300, height: 300 }, getVisibleBounds(primary)),
     { x: 1620, y: 740 },
   )
+})
+
+test('falls back to monitor bounds when the work area is invalid', () => {
+  assert.deepEqual(getVisibleBounds({
+    ...primary,
+    workArea: {
+      position: { x: Number.NaN, y: 0 },
+      size: { width: 1920, height: 1040 },
+    },
+  }), { x: 0, y: 0, width: 1920, height: 1080 })
 })
 
 test('finds monitors that use negative coordinates', () => {

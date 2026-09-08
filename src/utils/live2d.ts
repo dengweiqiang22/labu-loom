@@ -21,31 +21,48 @@ interface StartMotionOptions {
 }
 
 class Live2d {
+  // The renderer is recreated whenever Vue replaces its canvas during development.
   private app: Application | null = null
   public model: Live2DSprite | null = null
 
   constructor() { }
 
-  private initApp() {
-    if (this.app) return
+  private async initApp() {
+    const view = document.getElementById('live2dCanvas')
 
-    const view = document.getElementById('live2dCanvas') as HTMLCanvasElement
+    if (!(view instanceof HTMLCanvasElement)) {
+      throw new TypeError('Live2D canvas is not available')
+    }
 
-    this.app = new Application()
+    if (this.app?.canvas === view) return
 
-    return this.app.init({
-      view,
-      resizeTo: window,
-      backgroundAlpha: 0,
-      autoDensity: true,
-      resolution: devicePixelRatio,
-    })
+    this.destroy()
+
+    const app = new Application()
+
+    this.app = app
+
+    try {
+      await app.init({
+        view,
+        resizeTo: window,
+        backgroundAlpha: 0,
+        autoDensity: true,
+        resolution: devicePixelRatio,
+      })
+    } catch (error) {
+      if (this.app === app) this.app = null
+
+      app.destroy(false, { children: true, context: true })
+
+      throw error
+    }
   }
 
   public async load(path: string) {
-    await this.initApp()
+    this.destroyModel()
 
-    this.destroy()
+    await this.initApp()
 
     const files = await readDir(path)
 
@@ -90,9 +107,19 @@ class Live2d {
   }
 
   public destroy() {
+    this.destroyModel()
+
+    const app = this.app
+
+    this.app = null
+
+    app?.destroy(false, { children: true, context: true })
+  }
+
+  private destroyModel() {
     if (!this.model) return
 
-    this.model?.destroy()
+    this.model.destroy()
 
     this.model = null
   }

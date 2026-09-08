@@ -19,6 +19,10 @@ const MOVEMENT_CHECK_MS = 30_000
 const MOVEMENT_DURATION_MS = 800
 const MOVEMENT_FRAME_MS = 50
 
+function isFinitePoint(point: Point) {
+  return Number.isFinite(point.x) && Number.isFinite(point.y)
+}
+
 function delay(duration: number) {
   return new Promise(resolve => setTimeout(resolve, duration))
 }
@@ -33,6 +37,9 @@ export function useFiniteMovement(scheduleTask: ScheduleTask) {
 
   async function animateTo(target: Point, signal: AbortSignal) {
     const start = await appWindow.outerPosition()
+
+    if (!isFinitePoint(start) || !isFinitePoint(target)) return
+
     const startedAt = performance.now()
 
     setAutomaticWindowMovement(true)

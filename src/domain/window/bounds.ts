@@ -13,17 +13,29 @@ export interface Rectangle extends Point, Size {}
 export interface MonitorBounds {
   position: Point
   size: Size
-  workArea?: Rectangle
+  workArea?: {
+    position: Point
+    size: Size
+  }
+}
+
+function isFiniteRectangle(rectangle: Rectangle) {
+  return Number.isFinite(rectangle.x)
+    && Number.isFinite(rectangle.y)
+    && Number.isFinite(rectangle.width)
+    && Number.isFinite(rectangle.height)
 }
 
 export function getVisibleBounds(monitor: MonitorBounds): Rectangle {
   if (monitor.workArea) {
-    return {
-      x: monitor.workArea.x,
-      y: monitor.workArea.y,
-      width: monitor.workArea.width,
-      height: monitor.workArea.height,
+    const workArea = {
+      x: monitor.workArea.position.x,
+      y: monitor.workArea.position.y,
+      width: monitor.workArea.size.width,
+      height: monitor.workArea.size.height,
     }
+
+    if (isFiniteRectangle(workArea)) return workArea
   }
 
   return {
